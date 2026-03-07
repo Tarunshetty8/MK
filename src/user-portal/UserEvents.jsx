@@ -5,7 +5,7 @@ export default function UserEvents() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/events')
+        fetch('/api/events')
             .then(res => res.json())
             .then(data => setEvents(data))
             .catch(err => console.error("Could not fetch events:", err));

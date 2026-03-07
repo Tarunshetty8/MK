@@ -2,10 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve the Vite React frontend
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // --- Products Endpoints ---
 app.get('/api/products', (req, res) => {
@@ -157,8 +161,12 @@ app.delete('/api/events/:id', (req, res) => {
         res.json({ message: "Event deleted" });
     });
 });
+// Everything else serves the React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Backend server running on http://localhost:${PORT}`);
 });
