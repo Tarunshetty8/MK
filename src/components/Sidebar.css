@@ -1,0 +1,71 @@
+/* Sidebar specific overrides */
+.user-profile {
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.user-profile:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Slight highlight on hover in dark sidebar */
+}
+
+.profile-dropdown {
+    position: absolute;
+    bottom: 100%;
+    /* Make it pop upwards from the footer */
+    left: 0;
+    width: 200px;
+    margin-bottom: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+    color: #333;
+    /* Dark text on white background */
+}
+
+/* Specific styling for the popup content */
+.profile-details {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-details p {
+    margin: 5px 0;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.profile-details strong {
+    font-weight: 600;
+    color: #555;
+    margin-right: 5px;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 15px;
+    background: none;
+    border: none;
+    color: #e53e3e;
+    /* Standard red for logout/destructive actions */
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.logout-button span {
+    margin-left: 10px;
+}
+
+.logout-button:hover {
+    background-color: #fff5f5;
+    /* Light red background on hover */
+}
