@@ -162,7 +162,7 @@ app.delete('/api/events/:id', (req, res) => {
     });
 });
 // Everything else serves the React app
-app.get('*', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
