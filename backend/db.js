@@ -23,7 +23,7 @@ pool.getConnection((err, connection) => {
 
 async function initializeTables() {
     try {
-        
+
         await pool.promise().query(`CREATE TABLE IF NOT EXISTS Users (
             id VARCHAR(255) PRIMARY KEY,
             email VARCHAR(255) UNIQUE NOT NULL,
@@ -37,7 +37,7 @@ async function initializeTables() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )`);
 
-        
+
         await pool.promise().query(`CREATE TABLE IF NOT EXISTS Products (
             id VARCHAR(255) PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -50,7 +50,7 @@ async function initializeTables() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )`);
 
-        
+
         await pool.promise().query(`CREATE TABLE IF NOT EXISTS Orders (
             id VARCHAR(255) PRIMARY KEY,
             user_id VARCHAR(255),
@@ -65,7 +65,7 @@ async function initializeTables() {
             FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL
         )`);
 
-        
+
         await pool.promise().query(`CREATE TABLE IF NOT EXISTS Order_Items (
             id VARCHAR(255) PRIMARY KEY,
             order_id VARCHAR(255) NOT NULL,
@@ -76,7 +76,7 @@ async function initializeTables() {
             FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
         )`);
 
-        
+
         await pool.promise().query(`CREATE TABLE IF NOT EXISTS Enquiries (
             id VARCHAR(255) PRIMARY KEY,
             user_id VARCHAR(255),
@@ -91,7 +91,7 @@ async function initializeTables() {
             FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL
         )`);
 
-        
+
         await pool.promise().query(`CREATE TABLE IF NOT EXISTS Events (
             id VARCHAR(255) PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
@@ -112,7 +112,7 @@ async function initializeTables() {
 
 async function seedMockData() {
     try {
-        
+
         const [prodRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Products");
         if (parseInt(prodRes[0].count) === 0) {
             await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['1', 'Marmelo Sourdough Loaf', 'Bakery', 4.50, 24, 1]);
@@ -123,7 +123,7 @@ async function seedMockData() {
             await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['6', 'Roasted Coffee Beans 250g', 'Beverages', 8.50, 12, 0]);
         }
 
-        
+
         const [ordRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Orders");
         if (parseInt(ordRes[0].count) === 0) {
             await pool.promise().query(`INSERT INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7290', 'Sarah Jenkins', 'Sourdough Loaf (x2), Olive Oil (x1)', '2026-03-04 08:30:00', 45.50, 'Pending', '12:30 PM']);
@@ -132,23 +132,25 @@ async function seedMockData() {
             await pool.promise().query(`INSERT INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7287', 'James Wilson', 'Roasted Coffee Beans (x4)', '2026-03-03 14:20:00', 65.00, 'Collected', '04:30 PM (Yesterday)']);
         }
 
-        
+
         const [enqRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Enquiries");
         if (parseInt(enqRes[0].count) === 0) {
             await pool.promise().query(`INSERT INTO Enquiries (id, customer_name, type, event_date, guests, status, received, details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, ['ENQ-042', 'David Smith', 'Catering', '2026-06-15', 50, 'Pending', 'Today, 09:12 AM', "Looking for a buffet setup for a corporate lunch event."]);
             await pool.promise().query(`INSERT INTO Enquiries (id, customer_name, type, event_date, guests, status, received, details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, ['ENQ-041', 'Jessica Taylor', 'Venue Hire', '2026-05-20', 30, 'Approved', 'Yesterday, 14:30', "Private birthday party. Will need the venue from 6PM to 11PM."]);
         }
 
-        
+
         const [usrRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Users");
         if (parseInt(usrRes[0].count) === 0) {
-            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['ADMIN-001', 'admin@marmelo.com', 'admin_hash', 'Marmelo Admin', '+44 7700 000000', 0, 0, 'Active', 'admin']);
+            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['ADMIN-001', 'admin@marmelo.com', 'admin123', 'Marmelo Admin', '+44 7700 000000', 0, 0, 'Active', 'admin']);
             await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-088', 'sarah.j@example.com', 'hash', 'Sarah Jenkins', '+44 7700 900123', 12, 450.50, 'Active', 'customer']);
             await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-087', 'm.chen@example.com', 'hash', 'Michael Chen', '+44 7700 900456', 3, 185.00, 'Active', 'customer']);
             await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-086', 'emma.t@example.com', 'hash', 'Emma Thompson', '+44 7700 900789', 24, 1240.80, 'VIP', 'customer']);
         }
 
-        
+        // Force update the admin password on every startup in case the live DB already seeded 'admin_hash'
+        await pool.promise().query(`UPDATE Users SET password_hash = 'admin123' WHERE email = 'admin@marmelo.com'`);
+
         const [evtRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Events");
         if (parseInt(evtRes[0].count) === 0) {
             await pool.promise().query(`INSERT INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['1', 'Sourdough Masterclass', '2026-04-15 18:00:00', 'Marmelo Main Kitchen', 12, 15, 'Upcoming']);
