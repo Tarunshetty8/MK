@@ -8,10 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve the Vite React frontend
+
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// --- Products Endpoints ---
+
 app.get('/api/products', (req, res) => {
     pool.query("SELECT * FROM Products", (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -55,7 +55,7 @@ app.delete('/api/products/:id', (req, res) => {
     });
 });
 
-// --- Orders Endpoints ---
+
 app.get('/api/orders', (req, res) => {
     pool.query("SELECT * FROM Orders ORDER BY created_at DESC", (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -85,7 +85,7 @@ app.patch('/api/orders/:id/status', (req, res) => {
     });
 });
 
-// --- Enquiries Endpoints ---
+
 app.get('/api/enquiries', (req, res) => {
     pool.query("SELECT * FROM Enquiries ORDER BY created_at DESC", (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -115,7 +115,7 @@ app.patch('/api/enquiries/:id/status', (req, res) => {
     });
 });
 
-// --- Customers / Users Endpoints ---
+
 app.get('/api/customers', (req, res) => {
     pool.query("SELECT * FROM Users", (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -127,7 +127,58 @@ app.get('/api/customers', (req, res) => {
     });
 });
 
-// --- Events Endpoints ---
+app.post('/api/users/register', (req, res) => {
+    const { email, password, name, phone } = req.body;
+    const id = `CUST-${Math.floor(Math.random() * 10000)}`;
+
+
+    pool.query("SELECT * FROM Users WHERE email = ?", [email], (err, existsResult) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (existsResult.length > 0) {
+            return res.status(400).json({ error: "Email already registered." });
+        }
+
+
+        pool.query(
+            `INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [id, email, password, name, phone || '', 0, 0, 'Active', 'customer'],
+            (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                res.status(201).json({ id, email, name, role: 'customer', message: "User registered successfully" });
+            }
+        );
+    });
+});
+
+app.post('/api/users/login', (req, res) => {
+    const { email, password } = req.body;
+
+    pool.query("SELECT * FROM Users WHERE email = ?", [email], (err, existsResult) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (existsResult.length === 0) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
+
+        const user = existsResult[0];
+
+        // In a real production app, compare hashed passwords using bcrypt.
+        // For this demo, direct comparison of plaintext stored in password_hash.
+        if (user.password_hash !== password) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
+
+        // Successful Login
+        res.status(200).json({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            message: "Login successful"
+        });
+    });
+});
+
+
 app.get('/api/events', (req, res) => {
     pool.query("SELECT * FROM Events ORDER BY maxAttendees DESC", (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -161,7 +212,7 @@ app.delete('/api/events/:id', (req, res) => {
         res.json({ message: "Event deleted" });
     });
 });
-// Everything else serves the React app
+
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });

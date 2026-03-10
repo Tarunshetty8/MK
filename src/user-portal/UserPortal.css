@@ -1,4 +1,4 @@
-/* Precise styling for user portal matching Marmelo Kitchen Figma aesthetic */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 .user-layout {
@@ -7,7 +7,7 @@
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
     background-color: #f7f9fc;
-    /* Very light cool grey background */
+    
     color: #1e293b;
 
     --primary: #008751;
@@ -16,7 +16,7 @@
     --footer-bg: #111827;
 }
 
-/* NAVBAR */
+
 .user-navbar {
     display: flex;
     justify-content: space-between;
@@ -100,7 +100,7 @@
     width: 100%;
 }
 
-/* HERO SECTION */
+
 .hero-section {
     background-color: var(--hero-bg);
     color: white;
@@ -159,7 +159,7 @@
     transform: translateY(-2px);
 }
 
-/* EVENTS SECTION */
+
 .events-section {
     padding: 5rem 4rem;
     max-width: 1200px;
@@ -226,7 +226,7 @@
     padding: 1rem;
 }
 
-/* Fallback images in case no unsplash is used */
+
 .img-wine {
     background-image: url('https://images.unsplash.com/photo-1596796956624-9f8d95e0c50d?auto=format&fit=crop&q=80&w=800');
 }
@@ -314,7 +314,7 @@
     color: #006039;
 }
 
-/* FOOTER */
+
 .user-footer {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -378,7 +378,7 @@
     font-size: 0.95rem;
 }
 
-/* Reusable UI Components used in Auth/Basket/Shop */
+
 .primary-btn {
     background-color: var(--primary);
     color: white;
@@ -413,7 +413,7 @@
     background-color: #f1f5f9;
 }
 
-/* Product Grid Base */
+
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -459,12 +459,12 @@
     margin-bottom: 1rem;
 }
 
-/* Legacy fix for Auth/Basket if needed */
+
 .bg-card {
     background-color: white;
 }
 
-/* SERVICES DROPDOWN - Figma Clone */
+
 .nav-dropdown {
     position: relative;
     display: inline-block;

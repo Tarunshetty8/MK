@@ -7,7 +7,7 @@ export default function Shop() {
 
     const handleAdd = (product) => {
         addToBasket(product);
-        // Simple visual feedback
+        
         alert(`Added ${product.name} to your basket!`);
     };
 

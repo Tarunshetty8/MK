@@ -1,4 +1,4 @@
-/* Tables */
+
 .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -59,7 +59,7 @@
     color: var(--text-muted);
 }
 
-/* Badges */
+
 .status-badge,
 .type-badge {
     display: inline-flex;
@@ -116,7 +116,7 @@
     background-color: var(--danger-light);
 }
 
-/* Icon Buttons */
+
 .action-buttons {
     display: flex;
     gap: 0.5rem;
@@ -152,7 +152,7 @@
     border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* Pagination */
+
 .pagination {
     display: flex;
     align-items: center;
@@ -176,7 +176,7 @@
     font-size: 0.75rem;
 }
 
-/* Filter Group */
+
 .filter-group {
     display: flex;
     gap: 0.5rem;
@@ -188,7 +188,7 @@
     color: var(--primary-dark);
 }
 
-/* Toggles */
+
 .toggle-switch {
     position: relative;
     display: inline-block;
@@ -254,7 +254,7 @@ input:checked+.slider:before {
     display: inline-block;
 }
 
-/* Modals */
+
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -340,7 +340,7 @@ input:checked+.slider:before {
     }
 }
 
-/* Forms */
+
 .form-group {
     display: flex;
     flex-direction: column;

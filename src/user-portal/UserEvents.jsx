@@ -11,7 +11,7 @@ export default function UserEvents() {
             .catch(err => console.error("Could not fetch events:", err));
     }, []);
 
-    // Helper to format date into Month and Day for the badge
+    
     const formatEventDate = (dateString) => {
         if (!dateString) return { month: 'TBD', day: '--' };
         const d = new Date(dateString);
@@ -43,7 +43,7 @@ export default function UserEvents() {
                         const dateBadge = formatEventDate(event.date);
                         return (
                             <div key={event.id} className="event-card">
-                                {/* Use generic placeholder class from CSS */}
+                                {}
                                 <div className={`event-image img-${['wine', 'sourdough', 'market'][event.title.length % 3]}`}>
                                     <div className="event-date-badge">
                                         <span className="event-month">{dateBadge.month}</span>

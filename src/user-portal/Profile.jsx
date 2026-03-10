@@ -3,9 +3,9 @@ import { DataContext } from '../context/DataContext';
 import './UserPortal.css';
 
 export default function Profile() {
-    // Here we'd fetch actual orders for this logged in user, for now using all orders
+    
     const { orders } = useContext(DataContext);
-    const userOrders = orders.slice(0, 3); // mock top 3 
+    const userOrders = orders.slice(0, 3); 
 
     return (
         <div className="profile-page" style={{ padding: '4rem 2rem', maxWidth: '800px', margin: '0 auto' }}>

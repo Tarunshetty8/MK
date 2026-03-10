@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Admin Layout and Pages
+
 import AppLayout from './components/AppLayout';
 import Dashboard from './pages/Dashboard';
 import POS from './pages/POS';
@@ -12,7 +12,7 @@ import Events from './pages/Events';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 
-// User Portal Layout and Pages
+
 import UserLayout from './user-portal/UserLayout';
 import Home from './user-portal/Home';
 import Shop from './user-portal/Shop';
@@ -32,7 +32,7 @@ function App() {
         <DataProvider>
             <BrowserRouter>
                 <Routes>
-                    {/* User Portal Routes */}
+                    {}
                     <Route path="/" element={<UserLayout />}>
                         <Route index element={<Home />} />
                         <Route path="shop" element={<Shop />} />
@@ -45,7 +45,7 @@ function App() {
                         <Route path="contact" element={<Contact />} />
                     </Route>
 
-                    {/* Admin Dashboard Routes */}
+                    {}
                     <Route path="/admin" element={<AppLayout />}>
                         <Route index element={<Dashboard />} />
                         <Route path="pos" element={<POS />} />

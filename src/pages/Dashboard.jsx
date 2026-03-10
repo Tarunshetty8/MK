@@ -8,8 +8,8 @@ export default function Dashboard() {
     const { orders, products, enquiries } = useContext(DataContext);
     const navigate = useNavigate();
 
-    // Calculate dynamic stats
-    const todayOrders = orders.filter(o => o.date.includes('2026')); // Adjusted to just pick up recent orders generally matching this year
+    
+    const todayOrders = orders.filter(o => o.date.includes('2026')); 
     const pendingOrdersCount = orders.filter(o => o.status === 'Pending').length;
 
     const lowStockCount = products.filter(p => p.stock < 10).length;
@@ -23,7 +23,7 @@ export default function Dashboard() {
     ];
 
     const recentOrders = orders.slice(0, 5);
-    // Mock top selling products by taking the first 4 active items
+    
     const topSellingProducts = products.filter(p => p.status === 'Active').slice(0, 4);
 
     const statusColors = {

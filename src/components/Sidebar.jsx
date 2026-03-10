@@ -15,7 +15,7 @@ import {
     ChevronLeft,
     ChevronRight
 } from 'lucide-react';
-import './Sidebar.css'; // Assume there may be custom CSS needed
+import './Sidebar.css'; 
 
 export default function Sidebar({ isOpen = true, toggleSidebar }) {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -34,7 +34,7 @@ export default function Sidebar({ isOpen = true, toggleSidebar }) {
     ];
 
     const handleLogout = () => {
-        // Here you would clear actual authentication tokens
+        
         navigate('/');
     };
 

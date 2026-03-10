@@ -7,7 +7,7 @@ export default function POS() {
     const { products, customers } = useContext(DataContext);
     const [cart, setCart] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [customerSelectionType, setCustomerSelectionType] = useState('existing'); // 'existing', 'walk-in', 'new'
+    const [customerSelectionType, setCustomerSelectionType] = useState('existing'); 
     const [selectedCustomerId, setSelectedCustomerId] = useState('');
     const [manualCustomerName, setManualCustomerName] = useState('');
 
@@ -57,7 +57,7 @@ export default function POS() {
     const handleCheckout = async () => {
         if (cart.length === 0) return;
 
-        // Ensure we send a string that matches the database column expectation
+        
         const itemsSummaryString = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
 
         try {
@@ -90,7 +90,7 @@ export default function POS() {
     return (
         <div className="page-container" style={{ padding: '0', height: '100vh', display: 'flex', flexDirection: 'column' }}>
 
-            {/* POS Top Bar */}
+            {}
             <div style={{ backgroundColor: '#fff', padding: '15px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                     <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -105,10 +105,10 @@ export default function POS() {
 
             <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
-                {/* Main Products Area */}
+                {}
                 <div style={{ flex: '1 1 65%', display: 'flex', flexDirection: 'column', backgroundColor: '#f8fafc', padding: '20px' }}>
 
-                    {/* Search & Filter Bar */}
+                    {}
                     <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
                         <div style={{ flex: 1, position: 'relative' }}>
                             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
@@ -130,7 +130,7 @@ export default function POS() {
                         </div>
                     </div>
 
-                    {/* Products Grid */}
+                    {}
                     <div className="pos-products-grid" style={{
                         flex: 1,
                         overflowY: 'auto',
@@ -159,7 +159,7 @@ export default function POS() {
                                     overflow: 'hidden'
                                 }}
                             >
-                                {/* Optional Image Placeholder styling */}
+                                {}
                                 <div style={{ height: '100px', backgroundColor: '#f1f5f9', borderRadius: '8px', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <ShoppingBag size={32} color="#cbd5e1" />
                                 </div>
@@ -181,10 +181,10 @@ export default function POS() {
                     </div>
                 </div>
 
-                {/* Right Side Cart Sidebar */}
+                {}
                 <div style={{ flex: '1 1 35%', minWidth: '320px', maxWidth: '450px', backgroundColor: '#fff', borderLeft: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
 
-                    {/* Cart Header & Customer Selection */}
+                    {}
                     <div style={{ padding: '20px', borderBottom: '1px solid #f1f5f9' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                             <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#1e293b' }}>Current Order</h2>
@@ -245,7 +245,7 @@ export default function POS() {
                         </div>
                     </div>
 
-                    {/* Cart Items List */}
+                    {}
                     <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px', alignContent: 'start' }}>
                         {cart.length === 0 ? (
                             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
@@ -280,7 +280,7 @@ export default function POS() {
                         )}
                     </div>
 
-                    {/* Checkout Footer */}
+                    {}
                     <div style={{ padding: '24px 20px', backgroundColor: '#fff', borderTop: '1px solid #e2e8f0', boxShadow: '0 -4px 10px rgba(0,0,0,0.02)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#64748b', fontSize: '0.95rem' }}>
                             <span>Subtotal</span>

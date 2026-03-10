@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Bell, Search, Menu } from 'lucide-react';
-import './Header.css'; // Let's add specific CSS for the dropdown
+import './Header.css'; 
 
 export default function Header() {
     const [showNotifications, setShowNotifications] = useState(false);

@@ -14,7 +14,7 @@ export default function Basket() {
 
     const handleCheckout = async () => {
         if (!currentUser) {
-            // Must be logged in to checkout
+            
             alert('Please sign in or create an account to complete your purchase.');
             navigate('/auth');
             return;
@@ -23,7 +23,7 @@ export default function Basket() {
         setIsCheckingOut(true);
 
         try {
-            // 1. Structure the order
+            
             const newOrder = {
                 customer: currentUser.email.split('@')[0] || 'Customer',
                 email: currentUser.email,
@@ -33,7 +33,7 @@ export default function Basket() {
                 date: new Date().toISOString().split('T')[0]
             };
 
-            // 2. Submit to backend
+            
             const res = await fetch('/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

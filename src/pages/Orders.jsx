@@ -15,7 +15,7 @@ export default function Orders() {
     const { orders, updateOrderStatus } = useContext(DataContext);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Modal states
+    
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);

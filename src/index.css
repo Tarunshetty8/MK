@@ -1,26 +1,26 @@
 :root {
-  /* Marmelo Figma Palette */
+  
   --primary: #059669;
-  /* Emerald Green */
+  
   --primary-dark: #047857;
-  /* Hover Green */
+  
   --primary-light: #d1fae5;
 
   --secondary: #0f766e;
-  /* Teal */
+  
   --secondary-dark: #0f6c65;
 
   --text-main: #020617;
-  /* Slate-950 / Near Black */
+  
   --text-muted: oklch(0.707 0.022 261.325);
-  /* Subtle Slate */
+  
   --text-inverse: #ffffff;
 
   --bg-main: #ffffff;
-  /* Clean white */
+  
   --bg-card: #ffffff;
   --bg-sidebar: #020617;
-  /* Matches footer */
+  
   --bg-muted: #f8fafc;
 
   --border-color: #e2e8f0;
@@ -39,10 +39,10 @@
 
   --radius-sm: 4px;
   --radius: 8px;
-  /* Common Figma button radius */
+  
   --radius-md: 12px;
   --radius-lg: 16px;
-  /* Common Figma card radius */
+  
 
   --transition: all 0.2s ease-in-out;
 }
@@ -52,14 +52,14 @@
   margin: 0;
   padding: 0;
   scrollbar-width: none;
-  /* Firefox */
+  
   -ms-overflow-style: none;
-  /* IE and Edge */
+  
 }
 
 *::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari and Opera */
+  
 }
 
 body {

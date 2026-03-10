@@ -1,4 +1,4 @@
-/* Sidebar specific overrides */
+
 .user-profile {
     position: relative;
     cursor: pointer;
@@ -9,13 +9,13 @@
 
 .user-profile:hover {
     background-color: rgba(255, 255, 255, 0.05);
-    /* Slight highlight on hover in dark sidebar */
+    
 }
 
 .profile-dropdown {
     position: absolute;
     bottom: 100%;
-    /* Make it pop upwards from the footer */
+    
     left: 0;
     width: 200px;
     margin-bottom: 15px;
@@ -25,10 +25,10 @@
     z-index: 1000;
     overflow: hidden;
     color: #333;
-    /* Dark text on white background */
+    
 }
 
-/* Specific styling for the popup content */
+
 .profile-details {
     padding: 15px;
     border-bottom: 1px solid #eee;
@@ -54,7 +54,7 @@
     background: none;
     border: none;
     color: #e53e3e;
-    /* Standard red for logout/destructive actions */
+    
     font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
@@ -67,5 +67,5 @@
 
 .logout-button:hover {
     background-color: #fff5f5;
-    /* Light red background on hover */
+    
 }

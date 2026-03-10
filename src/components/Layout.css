@@ -5,7 +5,7 @@
     background-color: var(--bg-main);
 }
 
-/* Sidebar */
+
 .sidebar {
     width: 260px;
     background-color: var(--bg-sidebar);
@@ -131,7 +131,7 @@
     margin: 0;
 }
 
-/* Main Container */
+
 .main-container {
     flex: 1;
     display: flex;
@@ -139,7 +139,7 @@
     overflow: hidden;
 }
 
-/* Header */
+
 .app-header {
     height: 64px;
     background-color: var(--bg-card);
@@ -230,7 +230,7 @@
     padding: 0 4px;
 }
 
-/* Main Content Area */
+
 .main-content {
     flex: 1;
     overflow-y: auto;
