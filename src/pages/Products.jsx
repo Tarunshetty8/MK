@@ -73,13 +73,21 @@ export default function Products() {
                     </div>
 
                     <div className="filter-group">
-                        <select className="form-select" style={{ width: 'auto' }} value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
-                            <option value="">All Categories</option>
-                            <option value="bakery">Bakery</option>
-                            <option value="pantry">Pantry</option>
-                            <option value="produce">Produce</option>
-                            <option value="beverages">Beverages</option>
-                        </select>
+                        <input
+                            type="text"
+                            list="filter-categories"
+                            className="form-input"
+                            style={{ width: '150px' }}
+                            placeholder="All Categories"
+                            value={categoryFilter}
+                            onChange={e => setCategoryFilter(e.target.value)}
+                        />
+                        <datalist id="filter-categories">
+                            <option value="Bakery" />
+                            <option value="Pantry" />
+                            <option value="Produce" />
+                            <option value="Beverages" />
+                        </datalist>
                     </div>
                 </div>
 
@@ -156,12 +164,21 @@ export default function Products() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div className="form-group" style={{ marginBottom: 0 }}>
                             <label className="form-label">Category</label>
-                            <select id="p-cat" className="form-select" defaultValue={editingProduct?.category || ''}>
-                                <option value="Bakery">Bakery</option>
-                                <option value="Pantry">Pantry</option>
-                                <option value="Produce">Produce</option>
-                                <option value="Beverages">Beverages</option>
-                            </select>
+                            <input
+                                type="text"
+                                id="p-cat"
+                                list="modal-categories"
+                                className="form-input"
+                                defaultValue={editingProduct?.category || ''}
+                                placeholder="Select or type category..."
+                                required
+                            />
+                            <datalist id="modal-categories">
+                                <option value="Bakery" />
+                                <option value="Pantry" />
+                                <option value="Produce" />
+                                <option value="Beverages" />
+                            </datalist>
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
                             <label className="form-label">Price (£)</label>

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, ShoppingCart, AlertCircle, Calendar } from 'lucide-react';
+import { TrendingUp, ShoppingCart, AlertCircle, Calendar, Star } from 'lucide-react';
 import { DataContext } from '../context/DataContext';
 import './Pages.css';
 
@@ -9,7 +9,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     // Calculate dynamic stats
-    const todayOrders = orders.filter(o => o.date.includes('2026-03-04')); // Mock logic for "today"
+    const todayOrders = orders.filter(o => o.date.includes('2026')); // Adjusted to just pick up recent orders generally matching this year
     const pendingOrdersCount = orders.filter(o => o.status === 'Pending').length;
 
     const lowStockCount = products.filter(p => p.stock < 10).length;
@@ -23,6 +23,8 @@ export default function Dashboard() {
     ];
 
     const recentOrders = orders.slice(0, 5);
+    // Mock top selling products by taking the first 4 active items
+    const topSellingProducts = products.filter(p => p.status === 'Active').slice(0, 4);
 
     const statusColors = {
         'Pending': 'var(--warning)',
@@ -58,7 +60,7 @@ export default function Dashboard() {
                 })}
             </div>
 
-            <div className="dashboard-grid">
+            <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
                 <div className="panel recent-orders">
                     <div className="panel-header">
                         <h2>Recent Orders</h2>
@@ -97,23 +99,48 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="panel quick-actions">
-                    <div className="panel-header">
-                        <h2>Quick Actions</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <div className="panel top-selling" style={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                        <div className="panel-header" style={{ padding: '1.5rem', borderBottom: '1px solid #f1f5f9' }}>
+                            <h2 style={{ fontSize: '1.1rem', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Star size={18} color="var(--primary)" /> Top Selling Products
+                            </h2>
+                        </div>
+                        <div className="panel-content" style={{ padding: '0 1.5rem' }}>
+                            {topSellingProducts.length > 0 ? topSellingProducts.map((product, idx) => (
+                                <div key={product.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', borderBottom: idx !== topSellingProducts.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.95rem' }}>{product.name}</span>
+                                        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{product.category}</span>
+                                    </div>
+                                    <div style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
+                                        £{product.price.toFixed(2)}
+                                    </div>
+                                </div>
+                            )) : (
+                                <p style={{ color: '#888', textAlign: 'center', padding: '1rem' }}>No products available.</p>
+                            )}
+                        </div>
                     </div>
-                    <div className="panel-content actions-list">
-                        <button className="action-btn" onClick={() => navigate('/products')}>
-                            <span className="action-icon add">+</span>
-                            Add New Product
-                        </button>
-                        <button className="action-btn" onClick={() => navigate('/orders')}>
-                            <span className="action-icon check">✓</span>
-                            Update Order Status
-                        </button>
-                        <button className="action-btn" onClick={() => navigate('/events')}>
-                            <span className="action-icon event">📅</span>
-                            Create Event
-                        </button>
+
+                    <div className="panel quick-actions">
+                        <div className="panel-header">
+                            <h2>Quick Actions</h2>
+                        </div>
+                        <div className="panel-content actions-list">
+                            <button className="action-btn" onClick={() => navigate('/products')}>
+                                <span className="action-icon add">+</span>
+                                Add New Product
+                            </button>
+                            <button className="action-btn" onClick={() => navigate('/orders')}>
+                                <span className="action-icon check">✓</span>
+                                Update Order Status
+                            </button>
+                            <button className="action-btn" onClick={() => navigate('/events')}>
+                                <span className="action-icon event">📅</span>
+                                Create Event
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
