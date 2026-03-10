@@ -66,13 +66,20 @@ export default function UserLayout() {
                         )}
                     </Link>
                     {currentUser ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginLeft: '1rem' }}>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                <User size={16} /> {currentUser.email.split('@')[0]}
-                            </span>
-                            <button onClick={handleLogout} className="header-auth-btn" style={{ backgroundColor: 'transparent', color: 'var(--text-main)', border: '1px solid var(--border-color)' }}>
-                                <LogOut size={16} style={{ marginRight: '6px' }} /> Logout
-                            </button>
+                        <div className="nav-dropdown" style={{ marginLeft: '1rem', cursor: 'pointer' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
+                                <User size={18} />
+                                <span style={{ fontWeight: '500' }}>{currentUser.email.split('@')[0]}</span>
+                                <span style={{ fontSize: '0.6rem', marginTop: '2px' }}>▼</span>
+                            </div>
+                            <div className="nav-dropdown-content" style={{ right: 0, left: 'auto', transform: 'none', minWidth: '150px' }}>
+                                <Link to="/profile" className="nav-dropdown-item">
+                                    <User size={16} /> <span>My Profile</span>
+                                </Link>
+                                <button onClick={handleLogout} className="nav-dropdown-item" style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                    <LogOut size={16} /> <span>Sign Out</span>
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <Link to="/auth" className="header-auth-btn">
