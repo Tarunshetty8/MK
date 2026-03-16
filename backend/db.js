@@ -1,5 +1,6 @@
 require('dotenv').config();
 const mysql = require('mysql2');
+const bcrypt = require('bcryptjs');
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST || 'localhost',
@@ -142,14 +143,17 @@ async function seedMockData() {
 
         const [usrRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Users");
         if (parseInt(usrRes[0].count) === 0) {
-            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['ADMIN-001', 'admin@marmelo.com', 'admin123', 'Marmelo Admin', '+44 7700 000000', 0, 0, 'Active', 'admin']);
-            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-088', 'sarah.j@example.com', 'hash', 'Sarah Jenkins', '+44 7700 900123', 12, 450.50, 'Active', 'customer']);
-            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-087', 'm.chen@example.com', 'hash', 'Michael Chen', '+44 7700 900456', 3, 185.00, 'Active', 'customer']);
-            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-086', 'emma.t@example.com', 'hash', 'Emma Thompson', '+44 7700 900789', 24, 1240.80, 'VIP', 'customer']);
+            const adminHash = bcrypt.hashSync('admin123', 10);
+            const userHash = bcrypt.hashSync('password', 10);
+            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['ADMIN-001', 'admin@marmelo.com', adminHash, 'Marmelo Admin', '+44 7700 000000', 0, 0, 'Active', 'admin']);
+            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-088', 'sarah.j@example.com', userHash, 'Sarah Jenkins', '+44 7700 900123', 12, 450.50, 'Active', 'customer']);
+            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-087', 'm.chen@example.com', userHash, 'Michael Chen', '+44 7700 900456', 3, 185.00, 'Active', 'customer']);
+            await pool.promise().query(`INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['CUST-086', 'emma.t@example.com', userHash, 'Emma Thompson', '+44 7700 900789', 24, 1240.80, 'VIP', 'customer']);
         }
 
         // Force update the admin password on every startup in case the live DB already seeded 'admin_hash'
-        await pool.promise().query(`UPDATE Users SET password_hash = 'admin123' WHERE email = 'admin@marmelo.com'`);
+        const adminHashLive = bcrypt.hashSync('admin123', 10);
+        await pool.promise().query(`UPDATE Users SET password_hash = ? WHERE email = 'admin@marmelo.com'`, [adminHashLive]);
 
         const [evtRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Events");
         if (parseInt(evtRes[0].count) === 0) {

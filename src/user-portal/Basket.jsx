@@ -8,35 +8,39 @@ export default function Basket() {
     const { basketItems, updateBasketQuantity, removeFromBasket, clearBasket, currentUser } = useContext(DataContext);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [orderComplete, setOrderComplete] = useState(false);
+    const [checkoutError, setCheckoutError] = useState('');
     const navigate = useNavigate();
 
     const total = basketItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     const handleCheckout = async () => {
         if (!currentUser) {
-            
-            alert('Please sign in or create an account to complete your purchase.');
             navigate('/auth');
             return;
         }
 
         setIsCheckingOut(true);
+        setCheckoutError('');
 
         try {
             
             const newOrder = {
-                customer: currentUser.email.split('@')[0] || 'Customer',
+                customer_name: (currentUser.name || currentUser.email.split('@')[0]) || 'Customer',
                 email: currentUser.email,
-                items: basketItems.map(item => `${item.name} (x${item.quantity})`).join(', '),
+                items_summary: basketItems.map(item => `${item.name} (x${item.quantity})`).join(', '),
                 total_amount: total,
                 status: 'Pending',
-                date: new Date().toISOString().split('T')[0]
+                collection_time: `${document.getElementById('collectionDate').value} ${document.getElementById('collectionTime').value}`,
+                raw_items: basketItems.map(item => ({ id: item.id, quantity: item.quantity, price: item.price }))
             };
 
-            
+            const token = localStorage.getItem('marmelo_token');
             const res = await fetch('/api/orders', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
                 body: JSON.stringify(newOrder)
             });
 
@@ -44,11 +48,11 @@ export default function Basket() {
                 clearBasket();
                 setOrderComplete(true);
             } else {
-                alert('Failed to process order. Please try again.');
+                setCheckoutError('Failed to process order. Please try again.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            alert('An error occurred during checkout.');
+            setCheckoutError('An error occurred during checkout.');
         } finally {
             setIsCheckingOut(false);
         }
@@ -112,7 +116,21 @@ export default function Basket() {
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', paddingTop: '1rem' }}>
+                        <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Collection Details</h4>
+                            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <label htmlFor="collectionDate" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Date</label>
+                                    <input type="date" id="collectionDate" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} min={new Date().toISOString().split('T')[0]} defaultValue={new Date().toISOString().split('T')[0]} />
+                                </div>
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <label htmlFor="collectionTime" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Time</label>
+                                    <input type="time" id="collectionTime" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} defaultValue="12:00" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
                             <span style={{ fontSize: '1.25rem', fontWeight: '600' }}>Total:</span>
                             <span style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-main)' }}>£{total.toFixed(2)}</span>
                         </div>
@@ -120,6 +138,12 @@ export default function Basket() {
                         {!currentUser && (
                             <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 'var(--radius)', color: '#166534', fontSize: '0.9rem', textAlign: 'center' }}>
                                 <strong>Almost there!</strong> You'll need to sign in or create an account to complete your checkout.
+                            </div>
+                        )}
+
+                        {checkoutError && (
+                            <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fee2e2', border: '1px solid #fecaca', borderRadius: 'var(--radius)', color: '#991b1b', fontSize: '0.9rem', textAlign: 'center' }}>
+                                {checkoutError}
                             </div>
                         )}
 

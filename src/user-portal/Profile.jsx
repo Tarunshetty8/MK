@@ -1,22 +1,57 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/DataContext';
+import { useNavigate } from 'react-router-dom';
 import './UserPortal.css';
 
 export default function Profile() {
     
-    const { orders } = useContext(DataContext);
-    const userOrders = orders.slice(0, 3); 
+    const { orders, currentUser, logoutUser } = useContext(DataContext);
+    const [userOrders, setUserOrders] = useState([]);
+    const [profile, setProfile] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!currentUser) {
+            navigate('/auth');
+            return;
+        }
+
+        const fetchProfile = async () => {
+            const token = localStorage.getItem('marmelo_token');
+            if (!token) return;
+            try {
+                const res = await fetch('/api/profile', { headers: { 'Authorization': `Bearer ${token}` }});
+                if (res.ok) {
+                    const data = await res.json();
+                    setProfile(data);
+                }
+            } catch(e) {}
+        };
+        fetchProfile();
+
+        // filter orders for this user
+        const mine = orders.filter(o => o.customer === currentUser.name || (profile && o.user_id === profile.id));
+        setUserOrders(mine);
+    }, [currentUser, navigate, orders, profile]);
+
+    const handleLogout = () => {
+        logoutUser();
+        navigate('/');
+    };
+
+    if (!currentUser) return null;
 
     return (
         <div className="profile-page" style={{ padding: '4rem 2rem', maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h2 style={{ fontSize: '2.5rem' }}>My Account</h2>
-                <button className="secondary-btn">Log Out</button>
+                <button className="secondary-btn" onClick={handleLogout}>Log Out</button>
             </div>
 
             <div className="profile-info" style={{ backgroundColor: 'var(--bg-card)', padding: '2rem', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)', marginBottom: '3rem' }}>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Welcome, Guest User</h3>
-                <p style={{ color: 'var(--text-muted)' }}>Manage your details and view recent orders here.</p>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Welcome, {profile?.name || currentUser.name}</h3>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>{profile?.email || currentUser.email}</p>
+                <button className="secondary-btn" style={{ padding: '0.5rem 1rem' }}>Edit Details</button>
             </div>
 
             <div className="order-history">

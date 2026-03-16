@@ -1,21 +1,24 @@
 import { useState, useContext } from 'react';
 import { DataContext } from '../context/DataContext';
-import { Search, Plus, Minus, Trash2, UserPlus, ShoppingBag, CreditCard } from 'lucide-react';
-import './PagesUI.css';
+import { Search, Plus, User, ScanLine, Minus, Trash2 } from 'lucide-react';
 
 export default function POS() {
     const { products, customers } = useContext(DataContext);
     const [cart, setCart] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [customerSelectionType, setCustomerSelectionType] = useState('existing'); 
-    const [selectedCustomerId, setSelectedCustomerId] = useState('');
-    const [manualCustomerName, setManualCustomerName] = useState('');
+    const [activeTab, setActiveTab] = useState('Categories'); 
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [customerInput, setCustomerInput] = useState('');
+    const [statusMessage, setStatusMessage] = useState('');
+    const [statusType, setStatusType] = useState('');
+
+    const categories = ['Fruits & Vegetables', 'Bakery', 'Pantry', 'Beverages'];
+    // For demo using some Marmelo categories + reference ones
+    const displayCategories = activeTab === 'Categories' ? ['Fruits & Vegetables', 'shwapno', 'Daraz', 'Ghorer bazar'] : ['Daraz'];
 
     const activeProducts = products.filter(p => p.status === 'Active');
-
     const filteredProducts = activeProducts.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.category && p.category.toLowerCase().includes(searchTerm.toLowerCase()))
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const addToCart = (product) => {
@@ -44,282 +47,225 @@ export default function POS() {
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-    const getFinalCustomerName = () => {
-        if (customerSelectionType === 'existing' && selectedCustomerId) {
-            const cust = customers.find(c => c.id === selectedCustomerId);
-            return cust ? cust.name : 'Walk-in Customer';
-        } else if (customerSelectionType === 'new' && manualCustomerName.trim()) {
-            return manualCustomerName;
-        }
-        return 'Walk-in Customer';
-    };
-
     const handleCheckout = async () => {
         if (cart.length === 0) return;
-
-        
         const itemsSummaryString = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
 
         try {
+            const token = localStorage.getItem('marmelo_token');
             const res = await fetch('/api/orders', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
                 body: JSON.stringify({
                     total_amount: totalAmount,
                     collection_time: 'In Store',
-                    customer_name: getFinalCustomerName(),
-                    items: itemsSummaryString
+                    customer_name: customerInput || 'Walk-in Customer',
+                    items: itemsSummaryString,
+                    raw_items: cart.map(item => ({ id: item.id, quantity: item.quantity, price: item.price }))
                 })
             });
 
             if (res.ok) {
-                alert('Order placed successfully!');
+                setStatusMessage('Order placed successfully!');
+                setStatusType('success');
                 setCart([]);
-                setCustomerSelectionType('existing');
-                setSelectedCustomerId('');
-                setManualCustomerName('');
+                setCustomerInput('');
             } else {
-                alert('Failed to place order. Check server console for constraints errors.');
+                setStatusMessage('Failed to place order. Please try again.');
+                setStatusType('error');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            alert('Error connecting to server.');
+            setStatusMessage('Error connecting to server.');
+            setStatusType('error');
         }
+        
+        setTimeout(() => {
+            setStatusMessage('');
+            setStatusType('');
+        }, 3500);
     };
 
     return (
-        <div className="page-container" style={{ padding: '0', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-
-            {}
-            <div style={{ backgroundColor: '#fff', padding: '15px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                    <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <ShoppingBag className="text-primary" /> Point of Sale
-                    </h1>
-                    <p style={{ margin: '2px 0 0 0', color: '#64748b', fontSize: '0.875rem' }}>Fast checkout for in-store customers</p>
+        <div style={{ display: 'flex', height: '100%', minHeight: '80vh', backgroundColor: '#f4f6f9', padding: '10px', gap: '15px', fontFamily: 'sans-serif' }}>
+            {/* Left Sidebar - Categories */}
+            <div style={{ width: '180px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                    <button 
+                        onClick={() => setActiveTab('Categories')}
+                        style={{ flex: 1, backgroundColor: activeTab === 'Categories' ? '#5cb85c' : '#fff', color: activeTab === 'Categories' ? '#fff' : '#5cb85c', padding: '10px 5px', border: activeTab === 'Categories' ? 'none' : '1px solid #5cb85c', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+                        Categories
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('Brands')}
+                        style={{ flex: 1, backgroundColor: activeTab === 'Brands' ? '#5cb85c' : '#fff', color: activeTab === 'Brands' ? '#fff' : '#5cb85c', padding: '10px 5px', border: activeTab === 'Brands' ? 'none' : '1px solid #5cb85c', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+                        Brands
+                    </button>
                 </div>
-                <div style={{ color: '#1e293b', fontWeight: 'bold' }}>
-                    {new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                
+                <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', paddingRight: '5px' }}>
+                    {displayCategories.map(cat => (
+                        <div key={cat} onClick={() => setSelectedCategory(cat)} style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '15px 10px', textAlign: 'center', cursor: 'pointer', border: selectedCategory === cat ? '2px solid #5cb85c' : '1px solid #eee', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                            <div style={{ width: '60px', height: '60px', margin: '0 auto', backgroundColor: '#f0f0f0', borderRadius: '8px', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                                {/* Using distinct colored blocks or icon based on name to simulate images */}
+                                <div style={{ fontSize: '24px', color: '#888' }}>
+                                    {cat === 'Fruits & Vegetables' ? '🍎' : cat === 'shwapno' ? '🛒' : cat === 'Daraz' ? '📦' : '🏠'}
+                                </div>
+                            </div>
+                            <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e293b' }}>{cat}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-
-                {}
-                <div style={{ flex: '1 1 65%', display: 'flex', flexDirection: 'column', backgroundColor: '#f8fafc', padding: '20px' }}>
-
-                    {}
-                    <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
-                        <div style={{ flex: 1, position: 'relative' }}>
-                            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                            <input
-                                type="text"
-                                placeholder="Search products by name or category..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '12px 12px 12px 38px',
-                                    borderRadius: '8px',
-                                    border: '1px solid #cbd5e1',
-                                    fontSize: '0.95rem',
-                                    outline: 'none',
-                                    transition: 'border-color 0.2s'
-                                }}
-                            />
+            {/* Middle Column - Products Grid */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div style={{ backgroundColor: '#fff', padding: '15px', textAlign: 'center', borderRadius: '4px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                    <h2 style={{ color: '#5cb85c', margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Products</h2>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                        placeholder="Scan/Search featured product by name or code" 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ flex: 1, padding: '15px', border: '1px solid #e2e8f0', borderRadius: '4px', outline: 'none', fontSize: '14px' }} 
+                    />
+                    <button style={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', padding: '0 15px', borderRadius: '4px', cursor: 'pointer', color: '#333' }}>
+                        <ScanLine size={20} />
+                    </button>
+                </div>
+                
+                <div style={{ flex: 1, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '15px', alignContent: 'start', paddingRight: '5px' }}>
+                    {filteredProducts.map(p => (
+                        <div key={p.id} onClick={() => addToCart(p)} style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '15px', textAlign: 'center', cursor: 'pointer', border: '1px solid #eee', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', transition: 'transform 0.1s' }}>
+                            <div style={{ width: '100%', height: '110px', backgroundColor: '#f8fafc', marginBottom: '12px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px' }}>
+                                {p.name.includes('Loaf') ? '🍞' : p.name.includes('Babka') ? '🍩' : p.name.includes('Oil') ? '🫒' : p.name.includes('Jam') ? '🍯' : p.name.includes('Coffee') ? '☕' : '🥦'}
+                            </div>
+                            <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '4px' }}>{p.name}</div>
+                            <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '8px' }}>CODE{p.id}</div>
+                            <div style={{ fontSize: '12px', color: '#5cb85c', fontWeight: 'bold' }}>In Stock: {p.stock}</div>
                         </div>
-                    </div>
+                    ))}
+                    {filteredProducts.length === 0 && (
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#94a3b8' }}>No products found.</div>
+                    )}
+                </div>
+            </div>
 
-                    {}
-                    <div className="pos-products-grid" style={{
-                        flex: 1,
-                        overflowY: 'auto',
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                        gap: '16px',
-                        alignContent: 'start',
-                        paddingRight: '8px'
+            {/* Right Column - POS Cart & Order Summary */}
+            <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                
+                {statusMessage && (
+                    <div style={{ 
+                        padding: '12px 15px', 
+                        borderRadius: '4px', 
+                        backgroundColor: statusType === 'success' ? '#dcfce7' : '#fee2e2', 
+                        color: statusType === 'success' ? '#166534' : '#991b1b',
+                        border: `1px solid ${statusType === 'success' ? '#bbf7d0' : '#fecaca'}`,
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        textAlign: 'center'
                     }}>
-                        {filteredProducts.map(product => (
-                            <div
-                                key={product.id}
-                                className="pos-product-card"
-                                onClick={() => addToCart(product)}
-                                style={{
-                                    backgroundColor: '#fff',
-                                    border: '1px solid #e2e8f0',
-                                    borderRadius: '12px',
-                                    padding: '16px',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    transition: 'all 0.2s ease',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
-                                    position: 'relative',
-                                    overflow: 'hidden'
-                                }}
-                            >
-                                {}
-                                <div style={{ height: '100px', backgroundColor: '#f1f5f9', borderRadius: '8px', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <ShoppingBag size={32} color="#cbd5e1" />
-                                </div>
-                                <h4 style={{ margin: '0 0 8px 0', fontSize: '1rem', color: '#1e293b', fontWeight: '600', lineHeight: '1.3' }}>{product.name}</h4>
-                                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--primary)' }}>£{product.price.toFixed(2)}</p>
-                                    <p style={{ margin: 0, fontSize: '0.75rem', padding: '2px 6px', borderRadius: '12px', backgroundColor: product.stock < 10 ? '#fee2e2' : '#f1f5f9', color: product.stock < 10 ? '#ef4444' : '#64748b', fontWeight: '500' }}>
-                                        {product.stock} left
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                        {filteredProducts.length === 0 && (
-                            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#64748b' }}>
-                                <ShoppingBag size={48} style={{ opacity: 0.2, margin: '0 auto 16px block' }} />
-                                <p>No products found matching your search.</p>
-                            </div>
-                        )}
+                        {statusMessage}
+                    </div>
+                )}
+
+                <div style={{ display: 'flex', backgroundColor: '#fff', borderRadius: '4px', alignItems: 'center', border: '1px solid #e2e8f0' }}>
+                    <div style={{ padding: '12px 15px', color: '#1e293b' }}><User size={20} /></div>
+                    <input 
+                        placeholder="Enter Customer name or phone number" 
+                        value={customerInput}
+                        onChange={(e) => setCustomerInput(e.target.value)}
+                        style={{ flex: 1, border: 'none', outline: 'none', padding: '15px 0', fontSize: '14px' }} 
+                    />
+                    <button style={{ border: 'none', backgroundColor: '#fff', padding: '15px', cursor: 'pointer', borderLeft: '1px solid #e2e8f0', color: '#64748b' }}>
+                        <Plus size={20} />
+                    </button>
+                </div>
+                
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e2e8f0', backgroundColor: '#fff' }}>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px', minWidth: '400px' }}>
+                            <thead>
+                                <tr style={{ backgroundColor: '#cce5ff', color: '#5cb85c' }}>
+                                    <th style={{ padding: '12px', fontWeight: 'bold' }}>Product</th>
+                                    <th style={{ padding: '12px', fontWeight: 'bold' }}>IMEI/Variant</th>
+                                    <th style={{ padding: '12px', fontWeight: 'bold' }}>Tax</th>
+                                    <th style={{ padding: '12px', fontWeight: 'bold' }}>Price</th>
+                                    <th style={{ padding: '12px', fontWeight: 'bold', width: '80px' }}>QTY</th>
+                                    <th style={{ padding: '12px', fontWeight: 'bold' }}>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cart.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} style={{ textAlign: 'center', padding: '30px', color: '#64748b' }}>No products available in the list</td>
+                                    </tr>
+                                ) : (
+                                    cart.map(item => (
+                                        <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                            <td style={{ padding: '12px', maxWidth: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</td>
+                                            <td style={{ padding: '12px' }}>-</td>
+                                            <td style={{ padding: '12px' }}>0.00</td>
+                                            <td style={{ padding: '12px' }}>$ {item.price.toFixed(2)}</td>
+                                            <td style={{ padding: '12px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <button onClick={() => updateQuantity(item.id, -1)} style={{ padding: '2px', cursor: 'pointer', border: '1px solid #e2e8f0', borderRadius: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}><Minus size={12}/></button>
+                                                    <span style={{ fontSize: '12px', width: '16px', textAlign: 'center' }}>{item.quantity}</span>
+                                                    <button onClick={() => updateQuantity(item.id, 1)} style={{ padding: '2px', cursor: 'pointer', border: '1px solid #e2e8f0', borderRadius: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}><Plus size={12}/></button>
+                                                </div>
+                                            </td>
+                                            <td style={{ padding: '12px' }}>$ {(item.price * item.quantity).toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                {}
-                <div style={{ flex: '1 1 35%', minWidth: '320px', maxWidth: '450px', backgroundColor: '#fff', borderLeft: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
-
-                    {}
-                    <div style={{ padding: '20px', borderBottom: '1px solid #f1f5f9' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                            <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#1e293b' }}>Current Order</h2>
-                            <span style={{ backgroundColor: 'var(--primary)', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                {totalItemsCount} items
-                            </span>
-                        </div>
-
-                        <div style={{ backgroundColor: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-                                <button
-                                    onClick={() => setCustomerSelectionType('existing')}
-                                    style={{ flex: 1, padding: '4px 8px', fontSize: '0.8rem', border: 'none', borderRadius: '4px', cursor: 'pointer', backgroundColor: customerSelectionType === 'existing' ? '#fff' : 'transparent', fontWeight: customerSelectionType === 'existing' ? '600' : 'normal', color: customerSelectionType === 'existing' ? 'var(--primary)' : '#64748b', boxShadow: customerSelectionType === 'existing' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}>
-                                    Search
-                                </button>
-                                <button
-                                    onClick={() => setCustomerSelectionType('walk-in')}
-                                    style={{ flex: 1, padding: '4px 8px', fontSize: '0.8rem', border: 'none', borderRadius: '4px', cursor: 'pointer', backgroundColor: customerSelectionType === 'walk-in' ? '#fff' : 'transparent', fontWeight: customerSelectionType === 'walk-in' ? '600' : 'normal', color: customerSelectionType === 'walk-in' ? 'var(--primary)' : '#64748b', boxShadow: customerSelectionType === 'walk-in' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}>
-                                    Walk-in
-                                </button>
-                                <button
-                                    onClick={() => setCustomerSelectionType('new')}
-                                    style={{ flex: 1, padding: '4px 8px', fontSize: '0.8rem', border: 'none', borderRadius: '4px', cursor: 'pointer', backgroundColor: customerSelectionType === 'new' ? '#fff' : 'transparent', fontWeight: customerSelectionType === 'new' ? '600' : 'normal', color: customerSelectionType === 'new' ? 'var(--primary)' : '#64748b', boxShadow: customerSelectionType === 'new' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}>
-                                    New Name
-                                </button>
-                            </div>
-
-                            {customerSelectionType === 'existing' && (
-                                <select
-                                    className="form-select"
-                                    value={selectedCustomerId}
-                                    onChange={(e) => setSelectedCustomerId(e.target.value)}
-                                    style={{ width: '100%', padding: '8px', fontSize: '0.9rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
-                                >
-                                    <option value="">-- Select Registered Customer --</option>
-                                    {customers.map(c => (
-                                        <option key={c.id} value={c.id}>{c.name} ({c.email})</option>
-                                    ))}
-                                </select>
-                            )}
-
-                            {customerSelectionType === 'new' && (
-                                <div style={{ position: 'relative' }}>
-                                    <UserPlus size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                                    <input
-                                        type="text"
-                                        placeholder="Enter customer name..."
-                                        value={manualCustomerName}
-                                        onChange={(e) => setManualCustomerName(e.target.value)}
-                                        style={{ width: '100%', padding: '8px 8px 8px 32px', fontSize: '0.9rem', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none' }}
-                                    />
-                                </div>
-                            )}
-
-                            {customerSelectionType === 'walk-in' && (
-                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b', padding: '4px 0 text-center' }}>Order will be placed as Walk-in Customer</p>
-                            )}
-                        </div>
+                <div style={{ backgroundColor: '#dcf6fa', padding: '15px', color: '#0f172a', fontSize: '14px', fontWeight: '600' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <span>Total Products:</span>
+                        <span>{cart.length}({totalItemsCount})</span>
                     </div>
-
-                    {}
-                    <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px', alignContent: 'start' }}>
-                        {cart.length === 0 ? (
-                            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
-                                <ShoppingBag size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
-                                <p style={{ margin: 0 }}>Your cart is empty</p>
-                                <p style={{ fontSize: '0.8rem', mt: '4px' }}>Add products from the left side</p>
-                            </div>
-                        ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px 0' }}>
-                                {cart.map(item => (
-                                    <div key={item.id} style={{ display: 'flex', justifyItems: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: '1px dashed #e2e8f0' }}>
-                                        <div style={{ flex: 1, paddingRight: '12px' }}>
-                                            <p style={{ margin: '0 0 4px 0', fontWeight: '500', fontSize: '0.95rem', color: '#1e293b' }}>{item.name}</p>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>£{item.price.toFixed(2)}</p>
-                                            </div>
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                                            <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1rem', color: '#1e293b' }}>£{(item.price * item.quantity).toFixed(2)}</p>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: '#f1f5f9', borderRadius: '6px', padding: '2px' }}>
-                                                <button onClick={() => updateQuantity(item.id, -1)} style={{ padding: '4px 8px', background: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}><Minus size={12} /></button>
-                                                <span style={{ fontSize: '0.9rem', width: '24px', textAlign: 'center', fontWeight: '500' }}>{item.quantity}</span>
-                                                <button onClick={() => updateQuantity(item.id, 1)} style={{ padding: '4px 8px', background: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}><Plus size={12} /></button>
-                                            </div>
-                                        </div>
-                                        <button onClick={() => removeFromCart(item.id)} style={{ padding: '8px', background: 'transparent', color: '#ef4444', border: 'none', borderRadius: '6px', cursor: 'pointer', marginLeft: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <span>Total Amount:</span>
+                        <span>$ {totalAmount.toFixed(2)}</span>
                     </div>
-
-                    {}
-                    <div style={{ padding: '24px 20px', backgroundColor: '#fff', borderTop: '1px solid #e2e8f0', boxShadow: '0 -4px 10px rgba(0,0,0,0.02)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#64748b', fontSize: '0.95rem' }}>
-                            <span>Subtotal</span>
-                            <span>£{totalAmount.toFixed(2)}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', color: '#64748b', fontSize: '0.95rem' }}>
-                            <span>Tax (Included)</span>
-                            <span>£0.00</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b', alignItems: 'center' }}>
-                            <span>Total</span>
-                            <span style={{ color: 'var(--primary)' }}>£{totalAmount.toFixed(2)}</span>
-                        </div>
-
-                        <button
-                            onClick={handleCheckout}
-                            disabled={cart.length === 0}
-                            style={{
-                                width: '100%',
-                                padding: '16px',
-                                backgroundColor: cart.length === 0 ? '#cbd5e1' : 'var(--primary)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '8px',
-                                fontWeight: 'bold',
-                                fontSize: '1.1rem',
-                                cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
-                                transition: 'all 0.2s',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                gap: '8px',
-                                boxShadow: cart.length === 0 ? 'none' : '0 4px 6px rgba(47, 79, 79, 0.2)'
-                            }}
-                        >
-                            <CreditCard size={20} />
-                            Charge £{totalAmount.toFixed(2)}
-                        </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', color: '#ef4444' }}>
+                        <span>Discount</span>
+                        <span>- $ 0.00</span>
                     </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            Coupon 
+                            <button style={{ padding: '2px 8px', backgroundColor: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', color: '#64748b', fontSize: '14px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>+</button>
+                        </span>
+                        <span>$ 0.00</span>
+                    </div>
+                </div>
+
+                <div style={{ backgroundColor: '#5cb85c', padding: '15px 20px', color: '#fff', display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: 'bold', borderRadius: '4px' }}>
+                    <span>Grand Total:</span>
+                    <span>$ {totalAmount.toFixed(2)}</span>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', margin: '5px 0' }}>
+                    <button style={{ flex: 1, padding: '12px', backgroundColor: '#b2dfdb', color: '#00796b', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>Cash</button>
+                    <button style={{ flex: 1, padding: '12px', backgroundColor: '#fff', color: '#6772e5', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>stripe</button>
+                    <button style={{ flex: 1, padding: '12px', backgroundColor: '#ffebee', color: '#003087', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>PayPal</button>
+                    <button style={{ flex: 1, padding: '12px', backgroundColor: '#e3f2fd', color: '#0f4a8a', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>Razorpay</button>
+                    <button style={{ flex: 1, padding: '12px', backgroundColor: '#e0f7fa', color: '#00c3f8', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>paystack</button>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    <button onClick={() => setCart([])} style={{ flex: 1, padding: '16px', backgroundColor: '#ffcdd2', color: '#d32f2f', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>Cancel</button>
+                    <button style={{ flex: 1, padding: '16px', backgroundColor: '#ffcc80', color: '#e65100', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>Draft</button>
+                    <button onClick={handleCheckout} style={{ flex: 2, padding: '16px', backgroundColor: '#5cb85c', color: '#fff', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>Save & Complete</button>
                 </div>
             </div>
         </div>

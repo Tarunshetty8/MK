@@ -11,13 +11,25 @@ export function DataProvider({ children }) {
     const [customers, setCustomers] = useState([]);
     const [events, setEvents] = useState([]);
 
-    
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(() => {
+        const token = localStorage.getItem('marmelo_token');
+        if (token) {
+            try {
+                // simple base64 decode for JWT payload
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                return { id: payload.id, email: payload.email, role: payload.role, name: payload.name || 'User' };
+            } catch (e) {
+                console.error('Invalid token', e);
+                return null;
+            }
+        }
+        return null;
+    });
 
-    
+    // ...
     const [basketItems, setBasketItems] = useState([]);
 
-    
+    // Fetch initial data
     useEffect(() => {
         fetch(`${API_URL}/orders`).then(r => r.json()).then(setOrders).catch(console.error);
         fetch(`${API_URL}/products`).then(r => r.json()).then(setProducts).catch(console.error);
@@ -32,6 +44,7 @@ export function DataProvider({ children }) {
     };
 
     const logoutUser = () => {
+        localStorage.removeItem('marmelo_token');
         setCurrentUser(null);
     };
 

@@ -1,5 +1,5 @@
-import { useState, useContext } from 'react';
-import { Search, Filter, Eye, Edit2 } from 'lucide-react';
+import { useState, useContext, useEffect, useRef } from 'react';
+import { Search, Filter, Eye, Edit2, ChevronDown } from 'lucide-react';
 import Modal from '../components/Modal';
 import { DataContext } from '../context/DataContext';
 import './Pages.css';
@@ -8,14 +8,100 @@ const statusColors = {
     'Pending': 'var(--warning)',
     'In Preparation': 'var(--primary)',
     'Ready': 'var(--success)',
-    'Collected': 'var(--text-muted)'
+    'Collected': 'var(--text-muted)',
+    'Cancelled': 'var(--danger)'
+};
+
+const CustomDropdown = ({ value, options, onChange, colorMap }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const selectedColor = colorMap[value] || 'var(--text-muted)';
+    
+    return (
+        <div ref={dropdownRef} style={{ position: 'relative', display: 'inline-block' }}>
+            <div 
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    border: `1px solid ${selectedColor}30`,
+                    backgroundColor: `${selectedColor}15`,
+                    color: selectedColor,
+                    fontSize: '0.75rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                {value}
+                <ChevronDown size={14} style={{ opacity: 0.7 }} />
+            </div>
+
+            {isOpen && (
+                <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    marginTop: '4px',
+                    backgroundColor: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: 'var(--radius-md)',
+                    boxShadow: 'var(--shadow-md)',
+                    zIndex: 10,
+                    minWidth: '100%',
+                    overflow: 'hidden'
+                }}>
+                    {options.map(option => (
+                        <div
+                            key={option}
+                            onClick={() => {
+                                onChange(option);
+                                setIsOpen(false);
+                            }}
+                            style={{
+                                padding: '8px 12px',
+                                fontSize: '0.75rem',
+                                fontWeight: '500',
+                                color: colorMap[option] || 'var(--text-main)',
+                                cursor: 'pointer',
+                                backgroundColor: 'transparent',
+                                borderBottom: option !== options[options.length - 1] ? '1px solid var(--border-color)' : 'none',
+                                whiteSpace: 'nowrap'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = `${colorMap[option] || 'var(--text-muted)'}15`;
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                            }}
+                        >
+                            {option}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default function Orders() {
     const { orders, updateOrderStatus } = useContext(DataContext);
     const [searchTerm, setSearchTerm] = useState('');
 
-    
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -37,7 +123,7 @@ export default function Orders() {
                     <h1>Order Management</h1>
                     <p className="subtitle">View and update customer orders.</p>
                 </div>
-                <button className="btn btn-primary" style={{ display: 'flex', gap: '8px' }} onClick={() => alert('Filter options coming soon!')}>
+                <button className="btn btn-primary" disabled style={{ display: 'flex', gap: '8px', opacity: 0.6, cursor: 'not-allowed' }} title="Filter options coming soon!">
                     <Filter size={16} /> Filter Orders
                 </button>
             </div>
@@ -83,9 +169,12 @@ export default function Orders() {
                                     <td>{order.items.length > 30 ? order.items.substring(0, 30) + '...' : order.items}</td>
                                     <td className="fw-600">£{order.amount.toFixed(2)}</td>
                                     <td>
-                                        <span className="status-badge" style={{ backgroundColor: `${statusColors[order.status]}15`, color: statusColors[order.status] }}>
-                                            {order.status}
-                                        </span>
+                                        <CustomDropdown 
+                                            value={order.status}
+                                            options={['Pending', 'In Preparation', 'Ready', 'Collected', 'Cancelled']}
+                                            colorMap={statusColors}
+                                            onChange={(newStatus) => updateOrderStatus(order.id, newStatus)}
+                                        />
                                     </td>
                                     <td>{order.collection}</td>
                                     <td align="right">

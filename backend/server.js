@@ -3,10 +3,27 @@ const cors = require('cors');
 const pool = require('./db');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'marmelo-super-secret-key';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Auth Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
 
 
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -20,6 +37,20 @@ app.get('/api/products', (req, res) => {
             price: r.price, stock: r.stock_quantity, category: r.category,
             status: r.is_active ? 'Active' : 'Inactive', images: r.images ? JSON.parse(r.images) : []
         }));
+        res.json(mapped);
+    });
+});
+
+app.get('/api/products/:id', (req, res) => {
+    pool.query("SELECT * FROM Products WHERE id = ?", [req.params.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.length === 0) return res.status(404).json({ error: 'Product not found' });
+        const r = result[0];
+        const mapped = {
+            id: r.id, name: r.name, description: r.description,
+            price: r.price, stock: r.stock_quantity, category: r.category,
+            status: r.is_active ? 'Active' : 'Inactive', images: r.images ? JSON.parse(r.images) : []
+        };
         res.json(mapped);
     });
 });
@@ -66,14 +97,46 @@ app.get('/api/orders', (req, res) => {
         res.json(mapped);
     });
 });
+
+app.get('/api/orders/:id', (req, res) => {
+    pool.query("SELECT * FROM Orders WHERE id = ?", [req.params.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.length === 0) return res.status(404).json({ error: 'Order not found' });
+        const r = result[0];
+        const mapped = {
+            id: r.id, date: r.created_at, customer: r.customer_name || 'Guest User',
+            amount: r.total_amount, items: r.items_summary || 'Unknown items', status: r.status, collection: r.collection_time || 'N/A'
+        };
+        res.json(mapped);
+    });
+});
 app.post('/api/orders', (req, res) => {
-    const { total_amount, collection_time, customer_name, items } = req.body;
+    const { total_amount, collection_time, customer_name, items, raw_items } = req.body;
     const id = `ORD-${Math.floor(Math.random() * 10000)}`;
-    pool.query(`INSERT INTO Orders (id, total_amount, status, collection_time, customer_name, items_summary, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())`,
-        [id, total_amount, 'Pending', collection_time, customer_name || 'Guest', items || 'Unknown'],
+    
+    let userId = null;
+    if (req.headers['authorization']) {
+        const token = req.headers['authorization'].split(' ')[1];
+        try {
+            const user = jwt.verify(token, JWT_SECRET);
+            userId = user.id;
+        } catch(e) {}
+    }
+
+    pool.query(`INSERT INTO Orders (id, user_id, total_amount, status, collection_time, customer_name, items_summary, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
+        [id, userId, total_amount, 'Pending', collection_time, customer_name || 'Guest', items || 'Unknown'],
         (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
-            res.status(201).json({ id, message: "Order placed successfully" });
+            
+            if (raw_items && Array.isArray(raw_items) && raw_items.length > 0) {
+                const values = raw_items.map(item => [uuidv4(), id, item.id, item.quantity, item.price]);
+                pool.query(`INSERT INTO Order_Items (id, order_id, product_id, quantity, price_at_purchase) VALUES ?`, [values], (err2) => {
+                    if (err2) console.error("Error inserting order items:", err2);
+                    res.status(201).json({ id, message: "Order placed successfully" });
+                });
+            } else {
+                res.status(201).json({ id, message: "Order placed successfully" });
+            }
         }
     );
 });
@@ -127,33 +190,34 @@ app.get('/api/customers', (req, res) => {
     });
 });
 
-app.post('/api/users/register', (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
     const { email, password, name, phone } = req.body;
     const id = `CUST-${Math.floor(Math.random() * 10000)}`;
 
-
-    pool.query("SELECT * FROM Users WHERE email = ?", [email], (err, existsResult) => {
+    pool.query("SELECT * FROM Users WHERE email = ?", [email], async (err, existsResult) => {
         if (err) return res.status(500).json({ error: err.message });
         if (existsResult.length > 0) {
             return res.status(400).json({ error: "Email already registered." });
         }
 
+        const password_hash = await bcrypt.hash(password, 10);
 
         pool.query(
             `INSERT INTO Users (id, email, password_hash, name, phone, orders_count, spent, status, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, email, password, name, phone || '', 0, 0, 'Active', 'customer'],
+            [id, email, password_hash, name, phone || '', 0, 0, 'Active', 'customer'],
             (err, result) => {
                 if (err) return res.status(500).json({ error: err.message });
-                res.status(201).json({ id, email, name, role: 'customer', message: "User registered successfully" });
+                const token = jwt.sign({ id, email, role: 'customer' }, JWT_SECRET, { expiresIn: '24h' });
+                res.status(201).json({ id, email, name, role: 'customer', token, message: "User registered successfully" });
             }
         );
     });
 });
 
-app.post('/api/users/login', (req, res) => {
+app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
 
-    pool.query("SELECT * FROM Users WHERE email = ?", [email], (err, existsResult) => {
+    pool.query("SELECT * FROM Users WHERE email = ?", [email], async (err, existsResult) => {
         if (err) return res.status(500).json({ error: err.message });
         if (existsResult.length === 0) {
             return res.status(401).json({ error: "Invalid email or password." });
@@ -161,20 +225,48 @@ app.post('/api/users/login', (req, res) => {
 
         const user = existsResult[0];
 
-        // In a real production app, compare hashed passwords using bcrypt.
-        // For this demo, direct comparison of plaintext stored in password_hash.
-        if (user.password_hash !== password) {
+        const match = await bcrypt.compare(password, user.password_hash);
+        if (!match) {
             return res.status(401).json({ error: "Invalid email or password." });
         }
 
-        // Successful Login
+        const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+
         res.status(200).json({
             id: user.id,
             email: user.email,
             name: user.name,
             role: user.role,
+            token,
             message: "Login successful"
         });
+    });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+    // With stateless JWT, we mostly handle logout on the client side by dropping the token.
+    res.status(200).json({ message: "Logged out successfully" });
+});
+
+app.post('/api/auth/reset-password', (req, res) => {
+    const { email } = req.body;
+    // Mocking email send for password reset
+    res.status(200).json({ message: `Password reset email sent to ${email}` });
+});
+
+app.get('/api/profile', authenticateToken, (req, res) => {
+    pool.query("SELECT id, email, name, phone, orders_count, spent, role FROM Users WHERE id = ?", [req.user.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.length === 0) return res.status(404).json({ error: "User not found" });
+        res.json(result[0]);
+    });
+});
+
+app.put('/api/profile', authenticateToken, (req, res) => {
+    const { name, phone } = req.body;
+    pool.query("UPDATE Users SET name = ?, phone = ? WHERE id = ?", [name, phone, req.user.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Profile updated successfully" });
     });
 });
 
@@ -211,6 +303,19 @@ app.delete('/api/events/:id', (req, res) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: "Event deleted" });
     });
+});
+
+// Notifications
+app.post('/api/notifications/register', (req, res) => {
+    const { token } = req.body;
+    // Mocking storing FMC tokens
+    res.status(200).json({ message: "Device registered for notifications" });
+});
+
+app.post('/api/notifications/send', (req, res) => {
+    const { title, body, user_id } = req.body;
+    // Mocking sending push notification
+    res.status(200).json({ message: "Push notification simulated successfully" });
 });
 
 app.use((req, res) => {

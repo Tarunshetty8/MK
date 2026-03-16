@@ -1,14 +1,15 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { DataContext } from '../context/DataContext';
 import './UserPortal.css';
 
 export default function Shop() {
     const { products, addToBasket } = useContext(DataContext);
+    const [toastMessage, setToastMessage] = useState('');
 
     const handleAdd = (product) => {
         addToBasket(product);
-        
-        alert(`Added ${product.name} to your basket!`);
+        setToastMessage(`Added ${product.name} to your basket!`);
+        setTimeout(() => setToastMessage(''), 3000);
     };
 
     return (
@@ -45,6 +46,12 @@ export default function Shop() {
                     ))}
                 </div>
             </div>
+
+            {toastMessage && (
+                <div style={{ position: 'fixed', bottom: '20px', right: '20px', backgroundColor: '#10b981', color: 'white', padding: '12px 24px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 1000, fontWeight: 'bold' }}>
+                    {toastMessage}
+                </div>
+            )}
         </div>
     );
 }

@@ -10,18 +10,18 @@
   
   --secondary-dark: #0f6c65;
 
-  --text-main: #020617;
+  --text-main: #0f172a;
   
-  --text-muted: oklch(0.707 0.022 261.325);
+  --text-muted: #64748b;
   
   --text-inverse: #ffffff;
 
-  --bg-main: #ffffff;
+  --bg-main: #f8fafc;
   
   --bg-card: #ffffff;
-  --bg-sidebar: #020617;
+  --bg-sidebar: #ffffff;
   
-  --bg-muted: #f8fafc;
+  --bg-muted: #f1f5f9;
 
   --border-color: #e2e8f0;
 

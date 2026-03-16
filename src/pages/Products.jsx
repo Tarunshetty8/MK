@@ -11,6 +11,17 @@ export default function Products() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null);
+
+    const [customCategories, setCustomCategories] = useState(['Bakery', 'Pantry', 'Produce', 'Beverages']);
+    const allCategories = Array.from(new Set([...customCategories, ...products.map(p => p.category)]));
+    
+    const [modalCategory, setModalCategory] = useState('');
+    const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
 
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -20,9 +31,16 @@ export default function Products() {
 
     const handleToggleStatus = (id) => toggleProductStatus(id);
 
-    const handleDelete = (id) => {
-        if (window.confirm('Are you sure you want to delete this product?')) {
-            deleteProduct(id);
+    const handleDelete = (product) => {
+        setProductToDelete(product);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (productToDelete) {
+            deleteProduct(productToDelete.id);
+            setIsDeleteModalOpen(false);
+            setProductToDelete(null);
         }
     };
 
@@ -30,7 +48,7 @@ export default function Products() {
         e.preventDefault();
         const productData = {
             name: document.getElementById('p-name').value,
-            category: document.getElementById('p-cat').value,
+            category: modalCategory,
             price: parseFloat(document.getElementById('p-price').value),
             stock: parseInt(document.getElementById('p-stock').value, 10),
         };
@@ -45,6 +63,9 @@ export default function Products() {
 
     const openEditModal = (product = null) => {
         setEditingProduct(product);
+        setModalCategory(product?.category || '');
+        setIsAddingCategory(false);
+        setNewCategoryName('');
         setIsModalOpen(true);
     };
 
@@ -73,21 +94,17 @@ export default function Products() {
                     </div>
 
                     <div className="filter-group">
-                        <input
-                            type="text"
-                            list="filter-categories"
+                        <select
                             className="form-input"
-                            style={{ width: '150px' }}
-                            placeholder="All Categories"
+                            style={{ width: '180px', paddingRight: '30px' }}
                             value={categoryFilter}
                             onChange={e => setCategoryFilter(e.target.value)}
-                        />
-                        <datalist id="filter-categories">
-                            <option value="Bakery" />
-                            <option value="Pantry" />
-                            <option value="Produce" />
-                            <option value="Beverages" />
-                        </datalist>
+                        >
+                            <option value="">All Categories</option>
+                            {allCategories.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
@@ -135,7 +152,7 @@ export default function Products() {
                                     <td align="right">
                                         <div className="action-buttons justify-end">
                                             <button className="icon-btn" title="Edit Product" onClick={() => openEditModal(product)}><Edit size={18} /></button>
-                                            <button className="icon-btn danger" title="Archive Product" onClick={() => handleDelete(product.id)}><Trash2 size={18} /></button>
+                                            <button className="icon-btn danger" title="Archive Product" onClick={() => handleDelete(product)}><Trash2 size={18} /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -162,23 +179,152 @@ export default function Products() {
                         <input type="text" id="p-name" className="form-input" defaultValue={editingProduct?.name || ''} placeholder="e.g. Sourdough Loaf" required />
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                        <div className="form-group" style={{ marginBottom: 0 }}>
+                        <div 
+                            className="form-group" 
+                            style={{ marginBottom: 0, position: 'relative' }}
+                            onBlur={(e) => {
+                                if (!e.currentTarget.contains(e.relatedTarget)) {
+                                    setShowCategoryDropdown(false);
+                                    setIsAddingCategory(false);
+                                }
+                            }}
+                        >
                             <label className="form-label">Category</label>
-                            <input
-                                type="text"
-                                id="p-cat"
-                                list="modal-categories"
-                                className="form-input"
-                                defaultValue={editingProduct?.category || ''}
-                                placeholder="Select or type category..."
-                                required
-                            />
-                            <datalist id="modal-categories">
-                                <option value="Bakery" />
-                                <option value="Pantry" />
-                                <option value="Produce" />
-                                <option value="Beverages" />
-                            </datalist>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    id="p-cat"
+                                    className="form-input"
+                                    value={modalCategory}
+                                    onChange={(e) => {
+                                        setModalCategory(e.target.value);
+                                        setShowCategoryDropdown(true);
+                                    }}
+                                    onFocus={() => setShowCategoryDropdown(true)}
+                                    placeholder="Select or type category..."
+                                    required
+                                    autoComplete="off"
+                                    style={{ paddingRight: '30px', cursor: 'pointer' }}
+                                />
+                                <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', fontSize: '10px', color: '#64748b' }}>▼</span>
+                            </div>
+                            
+                            {showCategoryDropdown && (
+                                <div style={{
+                                    position: 'absolute', 
+                                    top: '100%', 
+                                    left: 0, 
+                                    right: 0, 
+                                    marginTop: '8px',
+                                    backgroundColor: '#231d1d', 
+                                    borderRadius: '8px', 
+                                    zIndex: 100,
+                                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)', 
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}>
+                                    {allCategories.filter(c => c.toLowerCase().includes(modalCategory.toLowerCase())).map(cat => (
+                                        <div 
+                                            key={cat} 
+                                            style={{ 
+                                                padding: '10px 16px', 
+                                                cursor: 'pointer', 
+                                                color: '#e2a588',
+                                                fontSize: '14px',
+                                                fontWeight: '600'
+                                            }}
+                                            onMouseDown={(e) => {
+                                                e.preventDefault();
+                                                setModalCategory(cat);
+                                                setShowCategoryDropdown(false);
+                                            }}
+                                            onMouseEnter={(e) => e.target.style.backgroundColor = '#382f2f'}
+                                            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                        >
+                                            {cat}
+                                        </div>
+                                    ))}
+                                    {isAddingCategory ? (
+                                        <div style={{ padding: '12px 16px', borderTop: '1px solid #382f2f', backgroundColor: '#231d1d', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            <input 
+                                                type="text" 
+                                                autoFocus
+                                                value={newCategoryName}
+                                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        if (newCategoryName.trim()) {
+                                                            setCustomCategories([...customCategories, newCategoryName.trim()]);
+                                                            setModalCategory(newCategoryName.trim());
+                                                            setIsAddingCategory(false);
+                                                            setNewCategoryName('');
+                                                            setShowCategoryDropdown(false);
+                                                        }
+                                                    }
+                                                }}
+                                                placeholder="Category name..."
+                                                style={{ width: '100%', padding: '6px 10px', borderRadius: '4px', border: '1px solid #382f2f', backgroundColor: '#1a1515', color: 'white', outline: 'none', fontSize: '13px' }}
+                                                onClick={(e) => e.stopPropagation()}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                            />
+                                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                                <button 
+                                                    type="button" 
+                                                    style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '12px', cursor: 'pointer' }}
+                                                    onClick={(e) => { e.preventDefault(); setIsAddingCategory(false); setNewCategoryName(''); }}
+                                                    onMouseDown={(e) => { e.preventDefault(); setIsAddingCategory(false); setNewCategoryName(''); }}
+                                                >Cancel</button>
+                                                <button 
+                                                    type="button" 
+                                                    style={{ background: 'var(--primary)', border: 'none', color: 'white', borderRadius: '4px', padding: '4px 10px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        if (newCategoryName.trim()) {
+                                                            setCustomCategories([...customCategories, newCategoryName.trim()]);
+                                                            setModalCategory(newCategoryName.trim());
+                                                            setIsAddingCategory(false);
+                                                            setNewCategoryName('');
+                                                            setShowCategoryDropdown(false);
+                                                        }
+                                                    }}
+                                                    onMouseDown={(e) => {
+                                                        e.preventDefault();
+                                                        if (newCategoryName.trim()) {
+                                                            setCustomCategories([...customCategories, newCategoryName.trim()]);
+                                                            setModalCategory(newCategoryName.trim());
+                                                            setIsAddingCategory(false);
+                                                            setNewCategoryName('');
+                                                            setShowCategoryDropdown(false);
+                                                        }
+                                                    }}
+                                                >Add</button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div 
+                                            style={{ 
+                                                padding: '12px 16px', 
+                                                cursor: 'pointer', 
+                                                color: '#ffffff', 
+                                                fontWeight: 600,
+                                                fontSize: '14px',
+                                                borderTop: '1px solid #382f2f',
+                                                backgroundColor: '#231d1d'
+                                            }}
+                                            onMouseDown={(e) => {
+                                                e.preventDefault();
+                                                setIsAddingCategory(true);
+                                            }}
+                                            onMouseEnter={(e) => e.target.style.backgroundColor = '#382f2f'}
+                                            onMouseLeave={(e) => e.target.style.backgroundColor = '#231d1d'}
+                                        >
+                                            + Add New Category
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
                             <label className="form-label">Price (£)</label>
@@ -190,6 +336,25 @@ export default function Products() {
                         <input type="number" id="p-stock" className="form-input" defaultValue={editingProduct?.stock || 0} required />
                     </div>
                 </form>
+            </Modal>
+
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Delete Product"
+                footer={
+                    <>
+                        <button className="btn btn-outline" onClick={() => setIsDeleteModalOpen(false)}>Cancel</button>
+                        <button className="btn btn-primary bg-danger" style={{ border: 'none', color: 'white' }} onClick={confirmDelete}>Delete</button>
+                    </>
+                }
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ margin: 0, color: 'var(--text-main)' }}>
+                        Are you sure you want to delete <strong>{productToDelete?.name}</strong>? 
+                        This action cannot be undone.
+                    </p>
+                </div>
             </Modal>
         </div>
     );

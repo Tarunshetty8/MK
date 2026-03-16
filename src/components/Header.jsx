@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Bell, Search, Menu } from 'lucide-react';
 import './Header.css'; 
 
-export default function Header() {
+export default function Header({ onToggleSidebar }) {
     const [showNotifications, setShowNotifications] = useState(false);
 
     const notifications = [
@@ -14,7 +14,7 @@ export default function Header() {
     return (
         <header className="app-header">
             <div className="header-left">
-                <button className="mobile-menu-btn">
+                <button className="mobile-menu-btn" onClick={onToggleSidebar}>
                     <Menu size={24} />
                 </button>
                 <div className="search-bar">

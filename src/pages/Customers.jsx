@@ -86,7 +86,7 @@ export default function Customers() {
                                         </span>
                                     </td>
                                     <td align="right">
-                                        <button className="icon-btn" title="More Options" onClick={() => alert('Customer options menu would open here.')}>
+                                        <button className="icon-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }} title="More Options (Coming Soon)">
                                             <MoreVertical size={18} />
                                         </button>
                                     </td>

@@ -11,6 +11,9 @@ export default function Events() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEvent, setEditingEvent] = useState(null);
+    
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [eventToDelete, setEventToDelete] = useState(null);
 
     const filteredEvents = events.filter(e => {
         const matchesSearch = e.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -18,9 +21,16 @@ export default function Events() {
         return matchesSearch && matchesFilter;
     });
 
-    const handleDelete = (id) => {
-        if (window.confirm("Delete this event?")) {
-            deleteEvent(id);
+    const handleDelete = (evt) => {
+        setEventToDelete(evt);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (eventToDelete) {
+            deleteEvent(eventToDelete.id);
+            setIsDeleteModalOpen(false);
+            setEventToDelete(null);
         }
     };
 
@@ -122,7 +132,7 @@ export default function Events() {
                                     <td align="right">
                                         <div className="action-buttons justify-end">
                                             <button className="icon-btn" title="Edit Event" onClick={() => openEditModal(event)}><Edit size={18} /></button>
-                                            <button className="icon-btn danger" title="Cancel Event" onClick={() => handleDelete(event.id)}><Trash2 size={18} /></button>
+                                            <button className="icon-btn danger" title="Cancel Event" onClick={() => handleDelete(event)}><Trash2 size={18} /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -163,6 +173,25 @@ export default function Events() {
                         <input type="text" id="e-loc" className="form-input" defaultValue={editingEvent?.location || ''} placeholder="e.g. Main Kitchen" required />
                     </div>
                 </form>
+            </Modal>
+
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Delete Event"
+                footer={
+                    <>
+                        <button className="btn btn-outline" onClick={() => setIsDeleteModalOpen(false)}>Cancel</button>
+                        <button className="btn btn-primary bg-danger" style={{ border: 'none', color: 'white' }} onClick={confirmDelete}>Delete</button>
+                    </>
+                }
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ margin: 0, color: 'var(--text-main)' }}>
+                        Are you sure you want to delete <strong>{eventToDelete?.title}</strong>? 
+                        This action cannot be undone.
+                    </p>
+                </div>
             </Modal>
         </div>
     );

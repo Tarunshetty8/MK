@@ -7,14 +7,16 @@ export default function Auth() {
     const navigate = useNavigate();
     const { loginUser } = useContext(DataContext);
     const [isSignUp, setIsSignUp] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setErrorMessage('');
         const email = e.target.email.value;
         const password = e.target.password.value;
 
         try {
-            const res = await fetch('/api/users/login', {
+            const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -24,6 +26,7 @@ export default function Auth() {
 
             if (res.ok) {
                 // Success
+                localStorage.setItem('marmelo_token', data.token);
                 loginUser({ email: data.email, name: data.name, role: data.role });
 
                 // Route based on role
@@ -33,23 +36,24 @@ export default function Auth() {
                     navigate('/basket');
                 }
             } else {
-                alert(data.error || 'Login failed. Please verify credentials.');
+                setErrorMessage(data.error || 'Login failed. Please verify credentials.');
             }
         } catch (error) {
             console.error('Login Error:', error);
-            alert('Error connecting to the server for authentication.');
+            setErrorMessage('Error connecting to the server for authentication.');
         }
     };
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setErrorMessage('');
         const name = e.target.name.value;
         const phone = e.target.phone.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
 
         try {
-            const res = await fetch('/api/users/register', {
+            const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, email, password })
@@ -58,15 +62,15 @@ export default function Auth() {
             const data = await res.json();
 
             if (res.ok) {
-
-                loginUser({ email: data.email, role: 'customer' });
+                localStorage.setItem('marmelo_token', data.token);
+                loginUser({ email: data.email, name: data.name, role: 'customer' });
                 navigate('/basket');
             } else {
-                alert(data.error || 'Registration failed. Please try again.');
+                setErrorMessage(data.error || 'Registration failed. Please try again.');
             }
         } catch (error) {
             console.error('Registration Error:', error);
-            alert('Error connecting to the server.');
+            setErrorMessage('Error connecting to the server.');
         }
     };
 
@@ -76,6 +80,13 @@ export default function Auth() {
                 <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '2rem' }}>
                     {isSignUp ? 'Create Account' : 'Welcome Back'}
                 </h2>
+                
+                {errorMessage && (
+                    <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '0.75rem', borderRadius: 'var(--radius)', marginBottom: '1.5rem', fontSize: '0.9rem', textAlign: 'center', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+                        {errorMessage}
+                    </div>
+                )}
+
                 <form onSubmit={isSignUp ? handleRegister : handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
                     {isSignUp && (
