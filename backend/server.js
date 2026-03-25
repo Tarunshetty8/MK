@@ -34,8 +34,8 @@ app.get('/api/products', (req, res) => {
         if (err) return res.status(500).json({ error: err.message });
         const mapped = result.map(r => ({
             id: r.id, name: r.name, description: r.description,
-            price: r.price, stock: r.stock_quantity, category: r.category,
-            status: r.is_active ? 'Active' : 'Inactive', images: r.images ? JSON.parse(r.images) : []
+            price: r.price, flash_sale_price: r.flash_sale_price, is_flash_sale: r.is_flash_sale, stock: r.stock_quantity, category: r.category,
+            status: r.is_active ? 'Active' : 'Inactive', images: r.images ? JSON.parse(r.images) : [], expiry_date: r.expiry_date
         }));
         res.json(mapped);
     });
@@ -48,31 +48,31 @@ app.get('/api/products/:id', (req, res) => {
         const r = result[0];
         const mapped = {
             id: r.id, name: r.name, description: r.description,
-            price: r.price, stock: r.stock_quantity, category: r.category,
-            status: r.is_active ? 'Active' : 'Inactive', images: r.images ? JSON.parse(r.images) : []
+            price: r.price, flash_sale_price: r.flash_sale_price, is_flash_sale: r.is_flash_sale, stock: r.stock_quantity, category: r.category,
+            status: r.is_active ? 'Active' : 'Inactive', images: r.images ? JSON.parse(r.images) : [], expiry_date: r.expiry_date
         };
         res.json(mapped);
     });
 });
 app.post('/api/products', (req, res) => {
-    const { name, description, price, stock, category, status } = req.body;
+    const { name, description, price, flash_sale_price, is_flash_sale, stock, category, status, expiry_date } = req.body;
     const id = Date.now().toString();
     const is_active = status === 'Active' ? 1 : 0;
     pool.query(
-        `INSERT INTO Products (id, name, description, price, stock_quantity, category, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [id, name, description, price, stock || 0, category, is_active],
+        `INSERT INTO Products (id, name, description, price, flash_sale_price, is_flash_sale, stock_quantity, category, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [id, name, description, price, flash_sale_price || null, is_flash_sale ? 1 : 0, stock || 0, category, is_active, expiry_date || null],
         (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
-            res.status(201).json({ id, name, price, stock, category, status });
+            res.status(201).json({ id, name, price, flash_sale_price, is_flash_sale, stock, category, status, expiry_date });
         }
     );
 });
 app.put('/api/products/:id', (req, res) => {
-    const { name, description, price, stock, category, status } = req.body;
+    const { name, description, price, flash_sale_price, is_flash_sale, stock, category, status, expiry_date } = req.body;
     const is_active = status === 'Active' ? 1 : 0;
     pool.query(
-        `UPDATE Products SET name = ?, description = ?, price = ?, stock_quantity = ?, category = ?, is_active = ? WHERE id = ?`,
-        [name, description, price, stock, category, is_active, req.params.id],
+        `UPDATE Products SET name = ?, description = ?, price = ?, flash_sale_price = ?, is_flash_sale = ?, stock_quantity = ?, category = ?, is_active = ?, expiry_date = ? WHERE id = ?`,
+        [name, description, price, flash_sale_price || null, is_flash_sale ? 1 : 0, stock, category, is_active, expiry_date || null, req.params.id],
         (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
             res.json({ message: "Product updated", id: req.params.id });

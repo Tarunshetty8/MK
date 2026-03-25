@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, LogIn, Store, LogOut, User } from 'lucide-react';
+import { ShoppingCart, LogIn, LogOut, User } from 'lucide-react';
 import { DataContext } from '../context/DataContext';
+import Logo from '../components/Logo';
 import './UserPortal.css';
 
 export default function UserLayout() {
@@ -19,22 +20,23 @@ export default function UserLayout() {
         <div className="user-layout">
             <nav className="user-navbar">
                 <div className="user-nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
-                    <Store size={32} color="var(--primary)" strokeWidth={2.5} />
-                    <Link to="/" style={{ marginLeft: '10px' }}>Marmelo Kitchen</Link>
+                    <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                        <Logo color="var(--primary)" size="1.8rem" />
+                    </Link>
                 </div>
                 <div className="user-nav-links">
                     <Link to="/shop">Shop</Link>
                     <div className="nav-dropdown">
                         <Link to="/services" style={{ margin: '0 1.25rem' }}>Services <span style={{ fontSize: '0.6rem', verticalAlign: 'middle', marginLeft: '2px' }}>▼</span></Link>
                         <div className="nav-dropdown-content">
-                            <Link to="/services#catering" className="nav-dropdown-item">
+                            <Link to="/services" className="nav-dropdown-item">
+                                <span className="dropdown-icon-wrapper">🏛️</span> <span>Venue Hire</span>
+                            </Link>
+                            <Link to="/services" className="nav-dropdown-item">
                                 <span className="dropdown-icon-wrapper">🍽️</span> <span>Catering</span>
                             </Link>
-                            <Link to="/services#venue" className="nav-dropdown-item">
-                                <span className="dropdown-icon-wrapper">🏠</span> <span>Venue Hire</span>
-                            </Link>
-                            <Link to="/services#wholesale" className="nav-dropdown-item">
-                                <span className="dropdown-icon-wrapper">📦</span> <span>Wholesale</span>
+                            <Link to="/services" className="nav-dropdown-item">
+                                <span className="dropdown-icon-wrapper">🎉</span> <span>Events</span>
                             </Link>
                         </div>
                     </div>
@@ -96,30 +98,31 @@ export default function UserLayout() {
             <footer className="user-footer">
                 <div className="footer-col brand-col">
                     <div className="footer-logo" style={{ display: 'flex', alignItems: 'center' }}>
-                        <Store size={32} color="var(--primary-light)" strokeWidth={2.5} />
-                        <h4 style={{ marginLeft: '10px', marginBottom: 0 }}>Marmelo Kitchen</h4>
+                        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                            <Logo color="var(--primary-light)" size="1.6rem" />
+                        </Link>
                     </div>
-                    <p>Artisan Portuguese-inspired food,<br />catering & venue hire in East London.</p>
+                    <p>Specialty cafe, organic grocery,<br />natural wine & craft beer in East London.</p>
                 </div>
                 <div className="footer-col">
                     <h4 className="footer-heading">Quick Links</h4>
                     <Link to="/shop">Shop</Link>
-                    <Link to="/services">Catering</Link>
                     <Link to="/services">Venue Hire</Link>
+                    <Link to="/services">Catering</Link>
                     <Link to="/events">Events</Link>
                 </div>
                 <div className="footer-col">
                     <h4 className="footer-heading">Opening Hours</h4>
-                    <div className="hours-row"><span>Mon</span><span>Closed</span></div>
-                    <div className="hours-row"><span>Tue–Fri</span><span>9am – 6pm</span></div>
-                    <div className="hours-row"><span>Saturday</span><span>8am – 7pm</span></div>
-                    <div className="hours-row"><span>Sunday</span><span>9am – 4pm</span></div>
+                    <div className="hours-row"><span>Mon–Thu</span><span>8am – 6pm</span></div>
+                    <div className="hours-row"><span>Friday</span><span>8am – 8pm</span></div>
+                    <div className="hours-row"><span>Saturday</span><span>8am – 6pm</span></div>
+                    <div className="hours-row"><span>Sunday</span><span>9am – 6pm</span></div>
                 </div>
                 <div className="footer-col">
                     <h4 className="footer-heading">Get in Touch</h4>
-                    <p>📍 47 Columbia Road, Bethnal Green,<br />London E2 7RG</p>
-                    <p>📞 +44 20 7946 0958</p>
-                    <p>✉️ hello@marmelokitchen.com</p>
+                    <p>📍 169 Francis Rd, London E10 6NT</p>
+                    <p>📞 020 3620 7580</p>
+                    <p>✉️ Natalie@marmelokitchen.com</p>
                 </div>
             </footer>
         </div>

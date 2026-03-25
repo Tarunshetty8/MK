@@ -10,12 +10,12 @@ import {
     MessageSquare,
     Settings,
     BarChart3,
-    Store,
     LogOut,
     CreditCard,
     ChevronLeft,
     ChevronRight
 } from 'lucide-react';
+import Logo from './Logo';
 import './Sidebar.css'; 
 
 export default function Sidebar({ isOpen = true, toggleSidebar }) {
@@ -45,9 +45,8 @@ export default function Sidebar({ isOpen = true, toggleSidebar }) {
     return (
         <aside className={`sidebar ${!isOpen ? 'closed' : ''}`}>
             <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: isOpen ? 'space-between' : 'center', flexDirection: isOpen ? 'row' : 'column', gap: isOpen ? '0.75rem' : '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Store className="brand-icon" size={32} color="var(--primary)" strokeWidth={2.5} />
-                    {isOpen && <h2 style={{ marginLeft: '10px', marginBottom: 0, whiteSpace: 'nowrap', color: 'var(--text-main)' }}>Marmelo Kitchen</h2>}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                    <Logo color="var(--primary)" size={isOpen ? "1.5rem" : "1.8rem"} collapsed={!isOpen} />
                 </div>
                 <button onClick={toggleSidebar} className="toggle-sidebar-btn" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', borderRadius: '4px' }}>
                     {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}

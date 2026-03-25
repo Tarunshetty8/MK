@@ -8,7 +8,7 @@ export default function About() {
                 <p className="hero-pre-heading" style={{ color: 'var(--primary)' }}>ABOUT US</p>
                 <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#0f172a', marginBottom: '1.5rem' }}>Our Story</h1>
                 <p style={{ fontSize: '1.15rem', color: '#64748b', lineHeight: '1.8' }}>
-                    Marmelo takes its name from the Portuguese word for quince — the fruit behind the world's first jam. We honour that tradition of turning simple, seasonal ingredients into something extraordinary.
+                    Marmelo was born from a passion for exceptional coffee, sustainable farming, and honest winemaking. We honor the tradition of turning simple, seasonal ingredients into something extraordinary.
                 </p>
             </div>
 
@@ -24,9 +24,9 @@ export default function About() {
                 </div>
 
                 <div style={{ padding: '3rem', backgroundColor: '#094a36', borderRadius: '16px', color: 'white', textAlign: 'center' }}>
-                    <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>The Kitchen</h2>
+                    <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>The Cafe & Cellar</h2>
                     <p style={{ color: '#a7f3d0', lineHeight: '1.6', maxWidth: '600px', margin: '0 auto' }}>
-                        Every loaf of sourdough, every jar of marmalade, and every curated event is designed to celebrate the joy of sharing good food with great people.
+                        Every cup of coffee, every bottle of wine, and every curated event is designed to celebrate the joy of sharing good food and drink with great people.
                     </p>
                 </div>
             </div>

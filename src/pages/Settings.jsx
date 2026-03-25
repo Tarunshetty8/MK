@@ -145,13 +145,13 @@ export default function Settings() {
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                         <label style={{ fontSize: '14px', fontWeight: '500', color: '#1e293b' }}>Contact Email</label>
-                                        <input type="email" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue="hello@marmelokitchen.com" />
+                                        <input type="email" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue="Natalie@marmelokitchen.com" />
                                     </div>
                                 </div>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                     <label style={{ fontSize: '14px', fontWeight: '500', color: '#1e293b' }}>Store Address</label>
-                                    <input type="text" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue="123 High Street, London, UK" />
+                                    <input type="text" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue="169 Francis Rd, London E10 6NT" />
                                 </div>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -161,7 +161,7 @@ export default function Settings() {
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                     <label style={{ fontSize: '14px', fontWeight: '500', color: '#1e293b' }}>Opening Hours</label>
-                                    <textarea rows="4" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue={"Mon: Closed\nTue-Fri: 9am - 6pm\nSat: 8am - 7pm\nSun: 9am - 4pm"} />
+                                    <textarea rows="4" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue={"Mon-Thu: 8am - 6pm\nFri: 8am - 8pm\nSat: 8am - 6pm\nSun: 9am - 6pm"} />
                                 </div>
                             </form>
                         )}

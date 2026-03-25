@@ -8,9 +8,9 @@ export default function Home() {
             <header className="hero-section">
                 <div className="hero-content">
                     <p className="hero-pre-heading">OUR STORY</p>
-                    <h1 className="hero-heading">Born from a love of Portuguese food & East London community</h1>
+                    <h1 className="hero-heading">Born from a love of exceptional coffee, organic produce & fine wine</h1>
                     <p className="hero-subheading">
-                        Marmelo takes its name from the Portuguese word for quince — the fruit behind the world's first jam. We honour that tradition of turning simple, seasonal ingredients into something extraordinary. Every product we make is a small celebration of flavour, craft, and the people we share it with.
+                        Marmelo is your neighborhood cafe, organic grocer, and wine cellar. We source the finest seasonal produce, roast our own coffee, and curate a selection of natural wines and craft beers. Every product we stock is a small celebration of flavor, craft, and community.
                     </p>
                     <div style={{ marginTop: '2.5rem' }}>
                         <Link to="/about" className="primary-pill-btn">
@@ -38,8 +38,8 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="event-card-body">
-                            <h3>Portuguese Wine & Cheese Evening</h3>
-                            <p className="event-desc">Join us for a guided tasting of exceptional Portuguese wines paired with artisan cheeses from Alentejo and...</p>
+                            <h3>Natural Wine & Cheese Tasting</h3>
+                            <p className="event-desc">Join us for a guided tasting of exceptional natural wines paired with artisan cheeses and organic produce...</p>
                             <div className="event-footer">
                                 <span className="event-meta">19:00 · 24 spots</span>
                                 <Link to="/" className="event-book">Book <ArrowRight size={14} /></Link>
@@ -55,8 +55,8 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="event-card-body">
-                            <h3>Sourdough Masterclass</h3>
-                            <p className="event-desc">Learn to bake your own beautiful sourdough bread from scratch. Take home your own starter, a freshly...</p>
+                            <h3>Coffee Brewing Masterclass</h3>
+                            <p className="event-desc">Learn to brew the perfect cup of coffee from scratch. Take home your own beans, a freshly...</p>
                             <div className="event-footer">
                                 <span className="event-meta">10:00 · 8 spots</span>
                                 <Link to="/" className="event-book">Book <ArrowRight size={14} /></Link>
@@ -72,8 +72,8 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="event-card-body">
-                            <h3>Summer Market & Open Kitchen</h3>
-                            <p className="event-desc">We're throwing open the doors for our first summer market! Live music, street food, our full product rang...</p>
+                            <h3>Organic Farmers Market</h3>
+                            <p className="event-desc">We're throwing open the doors for our seasonal farmers market! Live music, fresh produce, natural wines and...</p>
                             <div className="event-footer">
                                 <span className="event-meta">11:00 · 200 spots</span>
                                 <Link to="/" className="event-book" style={{ color: '#94a3b8', cursor: 'not-allowed' }}>Fully Booked</Link>

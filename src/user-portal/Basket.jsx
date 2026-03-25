@@ -11,7 +11,7 @@ export default function Basket() {
     const [checkoutError, setCheckoutError] = useState('');
     const navigate = useNavigate();
 
-    const total = basketItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = basketItems.reduce((sum, item) => sum + ((item.is_flash_sale ? item.flash_sale_price : item.price) * item.quantity), 0);
 
     const handleCheckout = async () => {
         if (!currentUser) {
@@ -31,7 +31,7 @@ export default function Basket() {
                 total_amount: total,
                 status: 'Pending',
                 collection_time: `${document.getElementById('collectionDate').value} ${document.getElementById('collectionTime').value}`,
-                raw_items: basketItems.map(item => ({ id: item.id, quantity: item.quantity, price: item.price }))
+                raw_items: basketItems.map(item => ({ id: item.id, quantity: item.quantity, price: item.is_flash_sale ? item.flash_sale_price : item.price }))
             };
 
             const token = localStorage.getItem('marmelo_token');
@@ -94,7 +94,10 @@ export default function Basket() {
                                         </div>
                                         <div>
                                             <h4 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.25rem' }}>{item.name}</h4>
-                                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>£{item.price.toFixed(2)} each</p>
+                                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                                                £{(item.is_flash_sale ? parseFloat(item.flash_sale_price) : parseFloat(item.price)).toFixed(2)} each
+                                                {item.is_flash_sale ? <span style={{ marginLeft: '6px', padding: '2px 6px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>FLASH SALE</span> : null}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -106,7 +109,7 @@ export default function Basket() {
                                         </div>
 
                                         <div style={{ textAlign: 'right', minWidth: '80px' }}>
-                                            <p style={{ fontWeight: '600', fontSize: '1.1rem', marginBottom: '0.25rem' }}>£{(item.price * item.quantity).toFixed(2)}</p>
+                                            <p style={{ fontWeight: '600', fontSize: '1.1rem', marginBottom: '0.25rem' }}>£{((item.is_flash_sale ? parseFloat(item.flash_sale_price) : parseFloat(item.price)) * item.quantity).toFixed(2)}</p>
                                             <button onClick={() => removeFromBasket(item.id)} style={{ background: 'transparent', border: 'none', color: '#ef4444', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', padding: 0, marginLeft: 'auto' }}>
                                                 <Trash2 size={14} /> Remove
                                             </button>

@@ -11,6 +11,7 @@ export default function Products() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [isFlashSale, setIsFlashSale] = useState(false);
     
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
@@ -50,7 +51,10 @@ export default function Products() {
             name: document.getElementById('p-name').value,
             category: modalCategory,
             price: parseFloat(document.getElementById('p-price').value),
+            flash_sale_price: isFlashSale ? parseFloat(document.getElementById('p-flash-price').value) || null : null,
+            is_flash_sale: isFlashSale,
             stock: parseInt(document.getElementById('p-stock').value, 10),
+            expiry_date: document.getElementById('p-expiry').value || null,
         };
 
         if (editingProduct) {
@@ -64,6 +68,7 @@ export default function Products() {
     const openEditModal = (product = null) => {
         setEditingProduct(product);
         setModalCategory(product?.category || '');
+        setIsFlashSale(product?.is_flash_sale ? true : false);
         setIsAddingCategory(false);
         setNewCategoryName('');
         setIsModalOpen(true);
@@ -117,6 +122,7 @@ export default function Products() {
                                 <th>Category</th>
                                 <th>Price</th>
                                 <th>Stock</th>
+                                <th>Expiry</th>
                                 <th>Status</th>
                                 <th align="right">Actions</th>
                             </tr>
@@ -136,10 +142,26 @@ export default function Products() {
                                     </td>
                                     <td className="fw-600">{product.name}</td>
                                     <td>{product.category}</td>
-                                    <td className="fw-500">£{product.price.toFixed(2)}</td>
+                                    <td className="fw-500">
+                                        {product.is_flash_sale && product.flash_sale_price ? (
+                                            <span style={{ color: 'var(--danger)', fontWeight: 'bold' }}>
+                                                £{parseFloat(product.flash_sale_price).toFixed(2)}
+                                                <span style={{ textDecoration: 'line-through', color: 'var(--text-muted)', fontSize: '0.8rem', marginLeft: '6px' }}>
+                                                    £{parseFloat(product.price).toFixed(2)}
+                                                </span>
+                                            </span>
+                                        ) : (
+                                            `£${parseFloat(product.price).toFixed(2)}`
+                                        )}
+                                    </td>
                                     <td>
                                         <span className={`status-badge ${product.stock < 10 ? 'bg-danger text-danger' : 'bg-muted'}`} style={{ padding: '0.15rem 0.5rem' }}>
                                             {product.stock}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style={{ fontSize: '0.85rem', color: product.expiry_date ? 'var(--text-main)' : 'var(--text-muted)', fontWeight: 500 }}>
+                                            {product.expiry_date ? new Date(product.expiry_date).toLocaleDateString() : 'N/A'}
                                         </span>
                                     </td>
                                     <td>
@@ -331,10 +353,29 @@ export default function Products() {
                             <input type="number" id="p-price" step="0.01" className="form-input" defaultValue={editingProduct?.price || ''} required />
                         </div>
                     </div>
-                    <div className="form-group" style={{ marginBottom: 0 }}>
-                        <label className="form-label">Initial Stock</label>
-                        <input type="number" id="p-stock" className="form-input" defaultValue={editingProduct?.stock || 0} required />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                            <label className="form-label">Initial Stock</label>
+                            <input type="number" id="p-stock" className="form-input" defaultValue={editingProduct?.stock || 0} required />
+                        </div>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                            <label className="form-label">Expiry Date (Optional)</label>
+                            <input type="date" id="p-expiry" className="form-input" defaultValue={editingProduct?.expiry_date ? new Date(editingProduct.expiry_date).toISOString().split('T')[0] : ''} />
+                        </div>
                     </div>
+                    <div className="form-group" style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                        <label className="toggle-switch">
+                            <input type="checkbox" checked={isFlashSale} onChange={(e) => setIsFlashSale(e.target.checked)} />
+                            <span className="slider round"></span>
+                        </label>
+                        <span style={{ fontWeight: 600, color: 'var(--danger)' }}>Enable Flash Sale</span>
+                    </div>
+                    {isFlashSale && (
+                        <div className="form-group" style={{ marginBottom: 0, padding: '1rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                            <label className="form-label" style={{ color: 'var(--danger)' }}>Flash Sale Price (£)</label>
+                            <input type="number" id="p-flash-price" step="0.01" className="form-input" defaultValue={editingProduct?.flash_sale_price || ''} required={isFlashSale} />
+                        </div>
+                    )}
                 </form>
             </Modal>
 

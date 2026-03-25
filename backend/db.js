@@ -39,20 +39,40 @@ async function initializeTables() {
         )`);
 
 
-        await pool.promise().query(`CREATE TABLE IF NOT EXISTS Products (
-            id VARCHAR(255) PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            description TEXT,
-            price FLOAT NOT NULL,
-            stock_quantity INT DEFAULT 0,
-            category VARCHAR(255),
-            images TEXT,
-            is_active INT DEFAULT 1,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )`);
+        await pool.promise().query(`
+            CREATE TABLE IF NOT EXISTS Products (
+                id VARCHAR(50) PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                description TEXT,
+                price FLOAT NOT NULL,
+                flash_sale_price FLOAT DEFAULT NULL,
+                is_flash_sale INT DEFAULT 0,
+                stock_quantity INT DEFAULT 0,
+                category VARCHAR(50),
+                images TEXT,
+                is_active BOOLEAN DEFAULT true,
+                expiry_date VARCHAR(255) DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
 
-
-        await pool.promise().query(`CREATE TABLE IF NOT EXISTS Orders (
+        // Safely alter existing table to add new columns if they do not exist
+        try {
+            await pool.promise().query("ALTER TABLE Products ADD COLUMN expiry_date VARCHAR(255) DEFAULT NULL");
+        } catch (e) {
+            if (e.code !== 'ER_DUP_FIELDNAME') console.error('Error adding expiry_date:', e.message);
+        }
+        try {
+            await pool.promise().query("ALTER TABLE Products ADD COLUMN flash_sale_price FLOAT DEFAULT NULL");
+        } catch (e) {
+            if (e.code !== 'ER_DUP_FIELDNAME') console.error('Error adding flash_sale_price:', e.message);
+        }
+        
+        try {
+            await pool.promise().query("ALTER TABLE Products ADD COLUMN is_flash_sale INT DEFAULT 0");
+        } catch (e) {
+            if (e.code !== 'ER_DUP_FIELDNAME') console.error('Error adding is_flash_sale:', e.message);
+        }  await pool.promise().query(`CREATE TABLE IF NOT EXISTS Orders (
             id VARCHAR(255) PRIMARY KEY,
             user_id VARCHAR(255),
             customer_name VARCHAR(255),
@@ -115,22 +135,24 @@ async function seedMockData() {
     try {
 
         const [prodRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Products");
-        if (parseInt(prodRes[0].count) === 0) {
-            await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['1', 'Marmelo Sourdough Loaf', 'Bakery', 4.50, 24, 1]);
-            await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['2', 'Organic Olive Oil 500ml', 'Pantry', 12.00, 15, 1]);
-            await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['3', 'Chocolate Babka', 'Bakery', 6.50, 8, 1]);
-            await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['4', 'Seasonal Vegetable Box', 'Produce', 18.00, 0, 1]);
-            await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['5', 'Marmelo Apricot Jam', 'Pantry', 5.50, 42, 1]);
-            await pool.promise().query(`INSERT INTO Products (id, name, category, price, stock_quantity, is_active) VALUES (?, ?, ?, ?, ?, ?)`, ['6', 'Roasted Coffee Beans 250g', 'Beverages', 8.50, 12, 0]);
+        if (parseInt(prodRes[0].count) >= 0) { // We update existing or insert new to ensure new branding is present
+            // Let's just truncate for local dev if we wanted, but to be safe we'll use REPLACE INTO or just INSERT with original IDs.
+            // Using REPLACE INTO is simpler here to overwrite the existing IDs with new data.
+            await pool.promise().query(`REPLACE INTO Products (id, name, category, price, flash_sale_price, is_flash_sale, stock_quantity, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['1', 'House Blend Coffee Beans 250g', 'Beverages', 12.50, 9.99, 1, 24, 1, '2026-12-31']);
+            await pool.promise().query(`REPLACE INTO Products (id, name, category, price, flash_sale_price, is_flash_sale, stock_quantity, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['2', 'Organic Hass Avocados (x2)', 'Produce', 4.00, null, 0, 15, 1, '2026-04-10']);
+            await pool.promise().query(`REPLACE INTO Products (id, name, category, price, flash_sale_price, is_flash_sale, stock_quantity, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['3', 'Natural Orange Wine 750ml', 'Wine', 22.50, null, 0, 8, 1, null]);
+            await pool.promise().query(`REPLACE INTO Products (id, name, category, price, flash_sale_price, is_flash_sale, stock_quantity, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['4', 'Local Craft IPA 4-pack', 'Beer', 14.00, null, 0, 0, 1, '2026-08-01']);
+            await pool.promise().query(`REPLACE INTO Products (id, name, category, price, flash_sale_price, is_flash_sale, stock_quantity, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['5', 'Seasonal Organic Veg Box', 'Produce', 18.50, null, 0, 42, 1, '2026-03-30']);
+            await pool.promise().query(`REPLACE INTO Products (id, name, category, price, flash_sale_price, is_flash_sale, stock_quantity, is_active, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, ['6', 'Fresh Sourdough Loaf', 'Bakery', 5.50, null, 0, 12, 1, '2026-03-27']);
         }
 
 
         const [ordRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Orders");
-        if (parseInt(ordRes[0].count) === 0) {
-            await pool.promise().query(`INSERT INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7290', 'Sarah Jenkins', 'Sourdough Loaf (x2), Olive Oil (x1)', '2026-03-04 08:30:00', 45.50, 'Pending', '12:30 PM']);
-            await pool.promise().query(`INSERT INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7289', 'Michael Chen', 'Seasonal Vegetable Box (x3), Apricot Jam (x2)', '2026-03-04 07:15:00', 120.00, 'In Preparation', '11:00 AM']);
-            await pool.promise().query(`INSERT INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7288', 'Emma Thompson', 'Chocolate Babka (x1), Sourdough Loaf (x1)', '2026-03-03 18:45:00', 28.90, 'Ready', '09:00 AM']);
-            await pool.promise().query(`INSERT INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7287', 'James Wilson', 'Roasted Coffee Beans (x4)', '2026-03-03 14:20:00', 65.00, 'Collected', '04:30 PM (Yesterday)']);
+        if (parseInt(ordRes[0].count) >= 0) {
+            await pool.promise().query(`REPLACE INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7290', 'Sarah Jenkins', 'House Blend Coffee Beans (x2), Sourdough Loaf (x1)', '2026-03-04 08:30:00', 30.50, 'Pending', '12:30 PM']);
+            await pool.promise().query(`REPLACE INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7289', 'Michael Chen', 'Seasonal Organic Veg Box (x3), Natural Orange Wine (x2)', '2026-03-04 07:15:00', 100.50, 'In Preparation', '11:00 AM']);
+            await pool.promise().query(`REPLACE INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7288', 'Emma Thompson', 'Fresh Sourdough Loaf (x1), Organic Hass Avocados (x1)', '2026-03-03 18:45:00', 9.50, 'Ready', '09:00 AM']);
+            await pool.promise().query(`REPLACE INTO Orders (id, customer_name, items_summary, created_at, total_amount, status, collection_time) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['ORD-7287', 'James Wilson', 'Local Craft IPA 4-pack (x4)', '2026-03-03 14:20:00', 56.00, 'Collected', '04:30 PM (Yesterday)']);
         }
 
 
@@ -156,9 +178,9 @@ async function seedMockData() {
         await pool.promise().query(`UPDATE Users SET password_hash = ? WHERE email = 'admin@marmelo.com'`, [adminHashLive]);
 
         const [evtRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Events");
-        if (parseInt(evtRes[0].count) === 0) {
-            await pool.promise().query(`INSERT INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['1', 'Sourdough Masterclass', '2026-04-15 18:00:00', 'Marmelo Main Kitchen', 12, 15, 'Upcoming']);
-            await pool.promise().query(`INSERT INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['2', 'Spring Wine Tasting', '2026-05-02 19:30:00', 'Marmelo Private Dining', 24, 30, 'Upcoming']);
+        if (parseInt(evtRes[0].count) >= 0) {
+            await pool.promise().query(`REPLACE INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['1', 'Coffee Brewing Masterclass', '2026-04-15 18:00:00', 'Marmelo Cafe Area', 12, 15, 'Upcoming']);
+            await pool.promise().query(`REPLACE INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['2', 'Natural Wine Tasting', '2026-05-02 19:30:00', 'Marmelo Cellar', 24, 30, 'Upcoming']);
         }
     } catch (err) {
         console.error('Failed to seed DB:', err);

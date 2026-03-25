@@ -47,17 +47,17 @@ export default function Contact() {
 
                     <div style={{ marginBottom: '2rem' }}>
                         <p style={{ fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Address</p>
-                        <p style={{ color: '#475569', lineHeight: '1.6' }}>47 Columbia Road<br />Bethnal Green<br />London E2 7RG</p>
+                        <p style={{ color: '#475569', lineHeight: '1.6' }}>169 Francis Rd<br />London E10 6NT</p>
                     </div>
 
                     <div style={{ marginBottom: '2rem' }}>
                         <p style={{ fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Contact Info</p>
-                        <p style={{ color: '#475569', lineHeight: '1.6' }}>+44 20 7946 0958<br />hello@marmelokitchen.com</p>
+                        <p style={{ color: '#475569', lineHeight: '1.6' }}>020 3620 7580<br />Natalie@marmelokitchen.com</p>
                     </div>
 
                     <div>
                         <p style={{ fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Business Hours</p>
-                        <p style={{ color: '#475569', lineHeight: '1.6' }}>Mon: Closed<br />Tue–Fri: 9am – 6pm<br />Saturday: 8am – 7pm<br />Sunday: 9am – 4pm</p>
+                        <p style={{ color: '#475569', lineHeight: '1.6' }}>Mon–Thu: 8am – 6pm<br />Friday: 8am – 8pm<br />Saturday: 8am – 6pm<br />Sunday: 9am – 6pm</p>
                     </div>
                 </div>
 

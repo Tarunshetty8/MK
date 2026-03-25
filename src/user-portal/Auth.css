@@ -1,0 +1,203 @@
+/* Auth.css - Modern Split-Screen Authentication Layout */
+.auth-container {
+    display: flex;
+    min-height: calc(100vh - 80px); /* Adjusting for navbar if needed */
+    background-color: #f8fafc;
+}
+
+.auth-image-panel {
+    display: none;
+    flex: 1;
+    position: relative;
+    background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1200'); /* Beautiful aesthetic cafe mood */
+    background-size: cover;
+    background-position: center;
+}
+
+.auth-image-panel::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(9, 74, 54, 0.7) 100%);
+}
+
+.auth-image-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4rem;
+    z-index: 10;
+    color: white;
+}
+
+.auth-image-content h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.auth-image-content p {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.auth-form-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #ffffff;
+    position: relative;
+}
+
+.auth-form-wrapper {
+    width: 100%;
+    max-width: 440px;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.auth-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    color: #64748b;
+    font-size: 1rem;
+}
+
+.auth-error {
+    background-color: #fef2f2;
+    color: #ef4444;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid #fecaca;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+.auth-input:focus {
+    border-color: var(--primary);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(0, 135, 81, 0.1);
+}
+
+.auth-input::placeholder {
+    color: #94a3b8;
+}
+
+.auth-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 135, 81, 0.2);
+}
+
+.auth-submit-btn:hover {
+    background-color: #006039;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 135, 81, 0.3);
+}
+
+.auth-submit-btn:active {
+    transform: translateY(0);
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+.auth-switch button {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0 0.25rem;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.auth-switch button:hover {
+    color: #006039;
+    text-decoration: underline;
+}
+
+/* Form Transition Wrapper */
+.form-transition-wrapper {
+    transition: height 0.3s ease;
+}
+
+/* Media Queries */
+@media screen and (min-width: 1024px) {
+    .auth-image-panel {
+        display: block;
+    }
+}

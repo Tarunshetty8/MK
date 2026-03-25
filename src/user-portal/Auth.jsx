@@ -1,13 +1,21 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataContext } from '../context/DataContext';
-import './UserPortal.css';
+import './Auth.css';
+import Logo from '../components/Logo';
 
 export default function Auth() {
     const navigate = useNavigate();
     const { loginUser } = useContext(DataContext);
     const [isSignUp, setIsSignUp] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [animateForm, setAnimateForm] = useState(false);
+
+    useEffect(() => {
+        setAnimateForm(true);
+        const timer = setTimeout(() => setAnimateForm(false), 500);
+        return () => clearTimeout(timer);
+    }, [isSignUp]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -74,59 +82,83 @@ export default function Auth() {
         }
     };
 
+    const toggleMode = () => {
+        setErrorMessage('');
+        setIsSignUp(!isSignUp);
+    };
+
     return (
-        <div className="auth-page" style={{ padding: '6rem 2rem', display: 'flex', justifyContent: 'center' }}>
-            <div className="auth-box" style={{ width: '100%', maxWidth: '400px', backgroundColor: 'var(--bg-card)', padding: '3rem', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border-color)' }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '2rem' }}>
-                    {isSignUp ? 'Create Account' : 'Welcome Back'}
-                </h2>
-                
-                {errorMessage && (
-                    <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '0.75rem', borderRadius: 'var(--radius)', marginBottom: '1.5rem', fontSize: '0.9rem', textAlign: 'center', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
-                        {errorMessage}
+        <div className="auth-container">
+            {/* Left Image Panel (Desktop Only) */}
+            <div className="auth-image-panel">
+                <div className="auth-image-content">
+                    <Logo color="white" size="2rem" style={{ marginBottom: '2rem' }} />
+                    <h1>Experience the extraordinary, everyday.</h1>
+                    <p>Join the Marmelo community for exclusive access to curated groceries, natural wines, and special events.</p>
+                </div>
+            </div>
+
+            {/* Right Form Panel */}
+            <div className="auth-form-panel">
+                <div className="auth-form-wrapper" key={isSignUp ? 'signup' : 'login'}>
+                    <div className="auth-header" style={{ animation: animateForm ? 'fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none' }}>
+                        <h2>{isSignUp ? 'Create an Account' : 'Welcome Back'}</h2>
+                        <p>{isSignUp ? 'Sign up to shop and book events.' : 'Please enter your details to sign in.'}</p>
                     </div>
-                )}
-
-                <form onSubmit={isSignUp ? handleRegister : handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-
-                    {isSignUp && (
-                        <>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <label htmlFor="name" style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--text-main)' }}>Full Name</label>
-                                <input type="text" id="name" name="name" placeholder="John Doe" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <label htmlFor="phone" style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--text-main)' }}>Phone Number (Optional)</label>
-                                <input type="tel" id="phone" name="phone" placeholder="+1234567890" style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} />
-                            </div>
-                        </>
+                    
+                    {errorMessage && (
+                        <div className="auth-error">
+                            {errorMessage}
+                        </div>
                     )}
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label htmlFor="email" style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--text-main)' }}>Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} />
-                    </div>
+                    <form 
+                        onSubmit={isSignUp ? handleRegister : handleLogin} 
+                        style={{ animation: animateForm ? 'fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both' : 'none' }}
+                    >
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label htmlFor="password" style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--text-main)' }}>Password</label>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} />
-                    </div>
+                        {isSignUp && (
+                            <div className="form-transition-wrapper">
+                                <div className="input-group">
+                                    <label htmlFor="name">Full Name</label>
+                                    <input className="auth-input" type="text" id="name" name="name" placeholder="John Doe" required={isSignUp} />
+                                </div>
+                                <div className="input-group">
+                                    <label htmlFor="phone">Phone Number (Optional)</label>
+                                    <input className="auth-input" type="tel" id="phone" name="phone" placeholder="+44 20 7946 0958" />
+                                </div>
+                            </div>
+                        )}
 
-                    <button type="submit" className="primary-btn" style={{ width: '100%', marginTop: '0.5rem' }}>
-                        {isSignUp ? 'Sign Up' : 'Sign In'}
-                    </button>
+                        <div className="input-group">
+                            <label htmlFor="email">Email Address</label>
+                            <input className="auth-input" type="email" id="email" name="email" placeholder="you@example.com" required />
+                        </div>
 
-                    <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                        {isSignUp ? "Already have an account?" : "Don't have an account?"}{' '}
-                        <button
-                            type="button"
-                            onClick={() => setIsSignUp(!isSignUp)}
-                            style={{ background: 'none', border: 'none', padding: 0, color: 'var(--primary)', fontWeight: '500', cursor: 'pointer', outline: 'none', textDecoration: 'underline' }}
-                        >
-                            {isSignUp ? 'Sign In' : 'Sign Up'}
+                        <div className="input-group">
+                            <label htmlFor="password">Password</label>
+                            <input className="auth-input" type="password" id="password" name="password" placeholder="••••••••" required />
+                        </div>
+
+                        <button type="submit" className="auth-submit-btn">
+                            {isSignUp ? 'Create Account' : 'Sign In'}
                         </button>
-                    </p>
-                </form>
+
+                        <div className="auth-switch">
+                            {isSignUp ? (
+                                <>
+                                    Already have an account? 
+                                    <button type="button" onClick={toggleMode}>Sign in</button>
+                                </>
+                            ) : (
+                                <>
+                                    Don't have an account? 
+                                    <button type="button" onClick={toggleMode}>Sign up</button>
+                                </>
+                            )}
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
