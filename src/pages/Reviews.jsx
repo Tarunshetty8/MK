@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
-import './PagesUI.css';
+import './Pages.css';
 
 export default function Reviews() {
     const [reviews, setReviews] = useState([]);
@@ -67,9 +67,9 @@ export default function Reviews() {
                 </div>
             </div>
 
-            <div className="content-card">
+            <div className="panel">
                 <div className="table-responsive">
-                    <table className="data-table">
+                    <table className="admin-table">
                         <thead>
                             <tr>
                                 <th>Date</th>
