@@ -20,7 +20,8 @@ import Auth from './user-portal/Auth';
 import Basket from './user-portal/Basket';
 import Profile from './user-portal/Profile';
 import About from './user-portal/About';
-import Services from './user-portal/Services';
+import Catering from './user-portal/Catering';
+import VenueHire from './user-portal/VenueHire';
 import UserEvents from './user-portal/UserEvents';
 import Contact from './user-portal/Contact';
 
@@ -40,7 +41,8 @@ function App() {
                         <Route path="basket" element={<Basket />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="about" element={<About />} />
-                        <Route path="services" element={<Services />} />
+                        <Route path="catering" element={<Catering />} />
+                        <Route path="venue-hire" element={<VenueHire />} />
                         <Route path="events" element={<UserEvents />} />
                         <Route path="contact" element={<Contact />} />
                     </Route>

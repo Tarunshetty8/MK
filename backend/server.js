@@ -159,11 +159,33 @@ app.get('/api/enquiries', (req, res) => {
         res.json(mapped);
     });
 });
+
+app.get('/api/user/enquiries', authenticateToken, (req, res) => {
+    pool.query("SELECT * FROM Enquiries WHERE user_id = ? ORDER BY created_at DESC", [req.user.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        const mapped = result.map(r => ({
+            id: r.id, type: r.type, name: r.customer_name, date: r.event_date,
+            guests: r.guests, status: r.status, received: r.received, details: r.details
+        }));
+        res.json(mapped);
+    });
+});
+
 app.post('/api/enquiries', (req, res) => {
     const { type, name, event_date, guests, details } = req.body;
     const id = `ENQ-${Math.floor(Math.random() * 10000)}`;
-    pool.query(`INSERT INTO Enquiries (id, type, customer_name, event_date, guests, status, received, details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [id, type, name, event_date, guests, 'Pending', 'Just now', details],
+
+    let userId = null;
+    if (req.headers['authorization']) {
+        const token = req.headers['authorization'].split(' ')[1];
+        try {
+            const user = jwt.verify(token, JWT_SECRET);
+            userId = user.id;
+        } catch(e) {}
+    }
+
+    pool.query(`INSERT INTO Enquiries (id, user_id, customer_name, type, event_date, guests, status, received, details) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [id, userId, name, type, event_date, guests, 'Pending', 'Just now', details],
         (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
             res.status(201).json({ id, message: "Enquiry submitted" });

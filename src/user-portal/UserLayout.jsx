@@ -26,20 +26,8 @@ export default function UserLayout() {
                 </div>
                 <div className="user-nav-links">
                     <Link to="/shop">Shop</Link>
-                    <div className="nav-dropdown">
-                        <Link to="/services" style={{ margin: '0 1.25rem' }}>Services <span style={{ fontSize: '0.6rem', verticalAlign: 'middle', marginLeft: '2px' }}>▼</span></Link>
-                        <div className="nav-dropdown-content">
-                            <Link to="/services" className="nav-dropdown-item">
-                                <span className="dropdown-icon-wrapper">🏛️</span> <span>Venue Hire</span>
-                            </Link>
-                            <Link to="/services" className="nav-dropdown-item">
-                                <span className="dropdown-icon-wrapper">🍽️</span> <span>Catering</span>
-                            </Link>
-                            <Link to="/services" className="nav-dropdown-item">
-                                <span className="dropdown-icon-wrapper">🎉</span> <span>Events</span>
-                            </Link>
-                        </div>
-                    </div>
+                    <Link to="/catering">Catering</Link>
+                    <Link to="/venue-hire">Venue Hire</Link>
                     <Link to="/events">Events</Link>
                     <Link to="/about">About</Link>
                     <Link to="/contact">Contact</Link>
@@ -107,8 +95,8 @@ export default function UserLayout() {
                 <div className="footer-col">
                     <h4 className="footer-heading">Quick Links</h4>
                     <Link to="/shop">Shop</Link>
-                    <Link to="/services">Venue Hire</Link>
-                    <Link to="/services">Catering</Link>
+                    <Link to="/catering">Catering</Link>
+                    <Link to="/venue-hire">Venue Hire</Link>
                     <Link to="/events">Events</Link>
                 </div>
                 <div className="footer-col">

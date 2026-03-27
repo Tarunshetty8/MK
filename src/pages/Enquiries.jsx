@@ -27,8 +27,8 @@ export default function Enquiries() {
         <div className="page-container">
             <div className="page-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <div>
-                    <h1>Catering & Venue Enquiries</h1>
-                    <p className="subtitle">Review and respond to private event requests.</p>
+                    <h1>Service Enquiries</h1>
+                    <p className="subtitle">Review and respond to Catering, Venue Hire, and Events requests.</p>
                 </div>
             </div>
 
@@ -69,6 +69,7 @@ export default function Enquiries() {
                             <button className={`btn btn-outline btn-sm ${typeFilter === 'All' ? 'active' : ''}`} onClick={() => setTypeFilter('All')}>All</button>
                             <button className={`btn btn-outline btn-sm ${typeFilter === 'Catering' ? 'active' : ''}`} onClick={() => setTypeFilter('Catering')}>Catering</button>
                             <button className={`btn btn-outline btn-sm ${typeFilter === 'Venue Hire' ? 'active' : ''}`} onClick={() => setTypeFilter('Venue Hire')}>Venue Hire</button>
+                            <button className={`btn btn-outline btn-sm ${typeFilter === 'Events' ? 'active' : ''}`} onClick={() => setTypeFilter('Events')}>Events</button>
                         </div>
                     </div>
 
@@ -98,7 +99,7 @@ export default function Enquiries() {
                                             <div className="text-small text-muted">{enq.received}</div>
                                         </td>
                                         <td>
-                                            <span className={`type-badge ${enq.type === 'Catering' ? 'bg-secondary' : 'bg-primary'}`}>
+                                            <span className={`type-badge ${enq.type === 'Catering' ? 'bg-secondary' : enq.type === 'Events' ? 'bg-warning' : 'bg-primary'}`}>
                                                 {enq.type}
                                             </span>
                                         </td>

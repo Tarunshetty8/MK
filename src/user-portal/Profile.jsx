@@ -7,6 +7,7 @@ export default function Profile() {
     
     const { orders, currentUser, logoutUser } = useContext(DataContext);
     const [userOrders, setUserOrders] = useState([]);
+    const [userEnquiries, setUserEnquiries] = useState([]);
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
 
@@ -24,6 +25,11 @@ export default function Profile() {
                 if (res.ok) {
                     const data = await res.json();
                     setProfile(data);
+                }
+                const enqRes = await fetch('/api/user/enquiries', { headers: { 'Authorization': `Bearer ${token}` }});
+                if (enqRes.ok) {
+                    const enqData = await enqRes.json();
+                    setUserEnquiries(enqData);
                 }
             } catch(e) {}
         };
@@ -65,6 +71,19 @@ export default function Profile() {
                         <div style={{ textAlign: 'right' }}>
                             <p style={{ fontWeight: '700', fontSize: '1.25rem', color: 'var(--text-main)' }}>£{o.amount.toFixed(2)}</p>
                             <button className="primary-btn" style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem', marginTop: '0.5rem' }}>Reorder</button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="order-history" style={{ marginTop: '3rem' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>My Enquiries</h3>
+                {userEnquiries.length === 0 && <p style={{ color: 'var(--text-muted)' }}>No enquiries yet.</p>}
+                {userEnquiries.map(enq => (
+                    <div key={enq.id} className="order-history-card" style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)', borderLeft: '4px solid var(--primary)', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <p style={{ fontWeight: '600', color: 'var(--text-main)', marginBottom: '0.25rem' }}>{enq.type} Request #{enq.id}</p>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Date: {enq.received} • Status: <span style={{ fontWeight: '600', color: enq.status === 'Pending' ? 'var(--warning)' : enq.status === 'Approved' ? 'var(--success)' : 'var(--danger)' }}>{enq.status}</span></p>
                         </div>
                     </div>
                 ))}
