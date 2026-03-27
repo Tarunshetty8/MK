@@ -7,6 +7,7 @@ import POS from './pages/POS';
 import Orders from './pages/Orders';
 import Products from './pages/Products';
 import Enquiries from './pages/Enquiries';
+import Reviews from './pages/Reviews';
 import Customers from './pages/Customers';
 import Events from './pages/Events';
 import Reports from './pages/Reports';
@@ -54,6 +55,7 @@ function App() {
                         <Route path="orders" element={<Orders />} />
                         <Route path="products" element={<Products />} />
                         <Route path="enquiries" element={<Enquiries />} />
+                        <Route path="reviews" element={<Reviews />} />
                         <Route path="customers" element={<Customers />} />
                         <Route path="events" element={<Events />} />
                         <Route path="reports" element={<Reports />} />

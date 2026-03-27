@@ -124,6 +124,23 @@ async function initializeTables() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )`);
 
+        await pool.promise().query(`CREATE TABLE IF NOT EXISTS Reviews (
+            id VARCHAR(255) PRIMARY KEY,
+            product_id VARCHAR(50) NOT NULL,
+            user_name VARCHAR(255) NOT NULL,
+            rating INT NOT NULL CHECK(rating >= 1 AND rating <= 5),
+            comment TEXT,
+            admin_reply TEXT DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
+        )`);
+
+        try {
+            await pool.promise().query(`ALTER TABLE Reviews ADD COLUMN admin_reply TEXT DEFAULT NULL`);
+        } catch (e) {
+            // Ignore error, column likely already exists
+        }
+
         console.log('Database tables initialized.');
         await seedMockData();
     } catch (err) {
@@ -181,6 +198,13 @@ async function seedMockData() {
         if (parseInt(evtRes[0].count) >= 0) {
             await pool.promise().query(`REPLACE INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['1', 'Coffee Brewing Masterclass', '2026-04-15 18:00:00', 'Marmelo Cafe Area', 12, 15, 'Upcoming']);
             await pool.promise().query(`REPLACE INTO Events (id, title, date, location, attendees, maxAttendees, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, ['2', 'Natural Wine Tasting', '2026-05-02 19:30:00', 'Marmelo Cellar', 24, 30, 'Upcoming']);
+        }
+
+        const [revRes] = await pool.promise().query("SELECT COUNT(*) as count FROM Reviews");
+        if (parseInt(revRes[0].count) === 0) {
+            await pool.promise().query(`INSERT INTO Reviews (id, product_id, user_name, rating, comment) VALUES (?, ?, ?, ?, ?)`, ['REV-001', '1', 'Alice Green', 5, 'Absolutely love these beans! Perfect for a morning espresso.']);
+            await pool.promise().query(`INSERT INTO Reviews (id, product_id, user_name, rating, comment) VALUES (?, ?, ?, ?, ?)`, ['REV-002', '1', 'John Doe', 4, 'Great flavor profile, slightly earthy.']);
+            await pool.promise().query(`INSERT INTO Reviews (id, product_id, user_name, rating, comment) VALUES (?, ?, ?, ?, ?)`, ['REV-003', '3', 'Emma T.', 5, 'One of the best natural orange wines I have tasted recently.']);
         }
     } catch (err) {
         console.error('Failed to seed DB:', err);

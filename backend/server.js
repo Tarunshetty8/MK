@@ -86,6 +86,45 @@ app.delete('/api/products/:id', (req, res) => {
     });
 });
 
+app.get('/api/products/:id/reviews', (req, res) => {
+    pool.query("SELECT * FROM Reviews WHERE product_id = ? ORDER BY created_at DESC", [req.params.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(result);
+    });
+});
+
+app.post('/api/products/:id/reviews', (req, res) => {
+    const { user_name, rating, comment } = req.body;
+    const reviewId = `REV-${Math.floor(Math.random() * 100000)}`;
+    pool.query(`INSERT INTO Reviews (id, product_id, user_name, rating, comment) VALUES (?, ?, ?, ?, ?)`,
+        [reviewId, req.params.id, user_name, rating, comment],
+        (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.status(201).json({ id: reviewId, message: "Review added successfully" });
+        }
+    );
+});
+
+app.get('/api/reviews', (req, res) => {
+    pool.query(`
+        SELECT r.*, p.name as product_name 
+        FROM Reviews r 
+        LEFT JOIN Products p ON r.product_id = p.id 
+        ORDER BY r.created_at DESC`, 
+        (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json(result);
+    });
+});
+
+app.patch('/api/reviews/:id/reply', (req, res) => {
+    const { reply } = req.body;
+    pool.query(`UPDATE Reviews SET admin_reply = ? WHERE id = ?`, [reply, req.params.id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Reply added successfully" });
+    });
+});
+
 
 app.get('/api/orders', (req, res) => {
     pool.query("SELECT * FROM Orders ORDER BY created_at DESC", (err, result) => {

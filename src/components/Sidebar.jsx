@@ -13,7 +13,8 @@ import {
     LogOut,
     CreditCard,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    Star
 } from 'lucide-react';
 import Logo from './Logo';
 import './Sidebar.css'; 
@@ -31,6 +32,7 @@ export default function Sidebar({ isOpen = true, toggleSidebar }) {
         { name: 'Orders', path: '/admin/orders', icon: ShoppingCart },
         ...(isAdmin ? [{ name: 'Products', path: '/admin/products', icon: Package }] : []),
         ...(isAdmin ? [{ name: 'Enquiries', path: '/admin/enquiries', icon: MessageSquare }] : []),
+        ...(isAdmin ? [{ name: 'Reviews', path: '/admin/reviews', icon: Star }] : []),
         ...(isAdmin ? [{ name: 'Customers', path: '/admin/customers', icon: Users }] : []),
         ...(isAdmin ? [{ name: 'Events', path: '/admin/events', icon: Calendar }] : []),
         ...(isAdmin ? [{ name: 'Reports', path: '/admin/reports', icon: BarChart3 }] : []),
