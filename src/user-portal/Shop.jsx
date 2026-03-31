@@ -13,6 +13,11 @@ export default function Shop() {
     const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '', user_name: currentUser ? currentUser.name : '' });
     const [reviewStatus, setReviewStatus] = useState('');
     const [banners, setBanners] = useState([]);
+    
+    // Search & Filter State
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [sortBy, setSortBy] = useState('Default');
 
     useEffect(() => {
         fetch('/api/settings/banners')
@@ -75,6 +80,31 @@ export default function Shop() {
         return (sum / reviews.length).toFixed(1);
     };
 
+    // Derived product list based on filters/search
+    const activeProducts = products.filter(p => p.status === 'Active');
+    
+    const categoryCounts = activeProducts.reduce((acc, p) => {
+        acc[p.category] = (acc[p.category] || 0) + 1;
+        return acc;
+    }, {});
+    
+    const categories = ['All', ...Object.keys(categoryCounts).sort()];
+
+    let displayedProducts = activeProducts.filter(p => {
+        const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()));
+        return matchesCategory && matchesSearch;
+    });
+
+    if (sortBy === 'Price: Low to High') {
+        displayedProducts.sort((a, b) => parseFloat(a.is_flash_sale ? a.flash_sale_price : a.price) - parseFloat(b.is_flash_sale ? b.flash_sale_price : b.price));
+    } else if (sortBy === 'Price: High to Low') {
+        displayedProducts.sort((a, b) => parseFloat(b.is_flash_sale ? b.flash_sale_price : b.price) - parseFloat(a.is_flash_sale ? a.flash_sale_price : a.price));
+    } else if (sortBy === 'Name: A-Z') {
+        displayedProducts.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
     return (
         <div style={{ paddingBottom: '6rem' }}>
             <div style={{ backgroundColor: '#f8fafc', padding: '5rem 2rem', textAlign: 'center', borderBottom: '1px solid #e2e8f0', marginBottom: '4rem' }}>
@@ -95,9 +125,56 @@ export default function Shop() {
                 </div>
             )}
 
+            <div className="shop-controls-container">
+                <div className="search-filter-row">
+                    <div className="search-input-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input 
+                            type="text" 
+                            className="shop-search-input" 
+                            placeholder="Search products..." 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <button className="shop-filter-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                        Filters
+                    </button>
+                    <select className="shop-select-sort" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="Default">Sort: Default</option>
+                        <option value="Price: Low to High">Price: Low to High</option>
+                        <option value="Price: High to Low">Price: High to Low</option>
+                        <option value="Name: A-Z">Name: A-Z</option>
+                    </select>
+                </div>
+
+                <div className="shop-category-chips">
+                    <button 
+                        className={`category-chip ${selectedCategory === 'All' ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory('All')}
+                    >
+                        All ({activeProducts.length})
+                    </button>
+                    {categories.filter(c => c !== 'All').map(cat => (
+                        <button 
+                            key={cat} 
+                            className={`category-chip ${selectedCategory === cat ? 'active' : ''}`}
+                            onClick={() => setSelectedCategory(cat)}
+                        >
+                            {cat} ({categoryCounts[cat]})
+                        </button>
+                    ))}
+                </div>
+
+                <div className="products-count">
+                    {displayedProducts.length} products
+                </div>
+            </div>
+
             <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
                 <div className="product-grid">
-                    {products.filter(p => p.status === 'Active').map((p, idx) => (
+                    {displayedProducts.map((p, idx) => (
                         <div key={p.id} className="product-card" onClick={() => handleProductClick(p)} style={{ cursor: 'pointer' }}>
                             <div style={{
                                 height: '240px',

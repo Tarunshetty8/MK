@@ -1,24 +1,26 @@
 {
-    "name": "marmelo-kitchen-admin",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "npm install && cd backend && npm install && cd .. && npm run build-vite",
-        "build-vite": "npx vite build",
-        "start": "cd backend && node server.js",
-        "preview": "vite preview"
-    },
-    "dependencies": {
-        "lucide-react": "^0.344.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "react-router-dom": "^6.22.3",
-        "recharts": "^2.12.2",
-        "@types/react": "^18.2.64",
-        "@types/react-dom": "^18.2.21",
-        "@vitejs/plugin-react": "^4.2.1",
-        "vite": "^5.1.6"
-    }
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.19.0",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
