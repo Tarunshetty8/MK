@@ -7,6 +7,9 @@ export default function About() {
             <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
                 <p className="hero-pre-heading" style={{ color: 'var(--primary)', letterSpacing: '2px', fontWeight: '700' }}>ABOUT</p>
                 <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#0f172a', marginBottom: '1.5rem', textTransform: 'uppercase' }}>The Story So Far</h1>
+                
+                <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/0e3fab3d-6f56-42a3-8e68-afb7ed057815/stay-up.jpg?format=1500w" alt="Marmelo Kitchen Storefront" style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: '16px', marginBottom: '2.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+
                 <p style={{ fontSize: '1.15rem', color: '#64748b', lineHeight: '1.8', marginBottom: '1.5rem', textAlign: 'left' }}>
                     Marmelo is a sustainable catering company in East London, creating delicious, seasonal dishes that are ethical, affordable, and full of flavor. We source fresh, organic ingredients from UK farmers and producers—meat from small Yorkshire farms, sustainably caught fish from the Cornish coast, and vegetables from independent growers across the country.
                 </p>

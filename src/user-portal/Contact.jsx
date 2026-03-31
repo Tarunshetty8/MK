@@ -95,6 +95,18 @@ export default function Contact() {
                     </form>
                 </div>
             </div>
+
+            <div style={{ marginTop: '4rem', overflow: 'hidden', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.5654523963283!2d-0.007559184228943793!3d51.55783357964409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761d76b1fcaedd%3A0xc4aa9aa9bb3b0b57!2s169%20Francis%20Rd%2C%20London%20E10%206NT!5e0!3m2!1sen!2suk!4v1711204000000!5m2!1sen!2suk" 
+                    width="100%" 
+                    height="400" 
+                    style={{ border: 0, display: 'block' }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
     );
 }

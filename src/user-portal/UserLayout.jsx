@@ -112,6 +112,14 @@ export default function UserLayout() {
                     <p>📞 020 3620 7580</p>
                     <p>✉️ Natalie@marmelokitchen.com</p>
                 </div>
+                <div className="footer-col" style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', gridColumn: '1 / -1', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.85rem' }}>
+                    <div style={{ display: 'flex', gap: '1.5rem' }}>
+                        <Link to="#" style={{ color: 'var(--text-muted)' }}>Terms & Conditions</Link>
+                        <Link to="#" style={{ color: 'var(--text-muted)' }}>Privacy Policy</Link>
+                        <Link to="#" style={{ color: 'var(--text-muted)' }}>Refund Policy</Link>
+                    </div>
+                    <p style={{ color: 'var(--text-muted)', margin: 0 }}>&copy; {new Date().getFullYear()} Marmelo Kitchen. All rights reserved.</p>
+                </div>
             </footer>
         </div>
     );

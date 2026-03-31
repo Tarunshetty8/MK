@@ -82,6 +82,24 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <section className="gallery-section" style={{ padding: '4rem 5%', backgroundColor: 'var(--stone-50)' }}>
+                <div className="section-header" style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                    <p className="section-pre-heading">OUR WORK</p>
+                    <h2 className="section-heading">Image Gallery</h2>
+                </div>
+                <div className="image-gallery-grid" style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '1.5rem',
+                    width: '100%'
+                }}>
+                    <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/8f7df1de-71b0-431a-b075-82ee88982569/img-5.jpg?format=1500w" alt="Gallery 1" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '12px' }} />
+                    <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/62538653-2c3a-40a6-aa76-a8e612d8558c/img-6.jpg?format=1500w" alt="Gallery 2" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '12px' }} />
+                    <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/031739f1-e709-4c7c-8a83-96ad1335265c/SUPER-CLUB.jpg?format=1500w" alt="Gallery 3" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '12px' }} />
+                    <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/a79f2660-cd8a-4eae-ae3d-093081c594e8/LOOP-EVENTS.jpg?format=1500w" alt="Gallery 4" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '12px' }} />
+                </div>
+            </section>
         </div>
     );
 }

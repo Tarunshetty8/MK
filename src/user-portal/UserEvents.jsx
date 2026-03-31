@@ -66,6 +66,11 @@ export default function UserEvents() {
                 </p>
             </div>
 
+            <div className="events-gallery" style={{ marginBottom: '4rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/031739f1-e709-4c7c-8a83-96ad1335265c/SUPER-CLUB.jpg?format=1500w" alt="Event Gallery 1" style={{ width: '100%', height: '350px', objectFit: 'cover', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+                <img src="https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/a79f2660-cd8a-4eae-ae3d-093081c594e8/LOOP-EVENTS.jpg?format=1500w" alt="Event Gallery 2" style={{ width: '100%', height: '350px', objectFit: 'cover', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+            </div>
+
             {events.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>
                     <p>Loading events...</p>

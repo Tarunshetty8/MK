@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './UserPortal.css';
 
 export default function VenueHire() {
-    const [formData, setFormData] = useState({ name: '', email: '', eventDate: '', guests: '', message: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', eventDate: '', time: '', guests: '', location: '', message: '' });
     const [status, setStatus] = useState('');
 
     const handleSubmit = async (e) => {
@@ -19,14 +19,14 @@ export default function VenueHire() {
                 body: JSON.stringify({
                     name: formData.name,
                     type: 'Venue Hire',
-                    details: `Email: ${formData.email}\nMessage: ${formData.message}`,
+                    details: `Email: ${formData.email}\nPhone: ${formData.phone}\nTime: ${formData.time}\nLocation Config: ${formData.location}\nMessage: ${formData.message}`,
                     event_date: formData.eventDate || null,
                     guests: formData.guests || null
                 })
             });
             if (res.ok) {
                 setStatus('Message sent successfully!');
-                setFormData({ name: '', email: '', eventDate: '', guests: '', message: '' });
+                setFormData({ name: '', email: '', phone: '', eventDate: '', time: '', guests: '', location: '', message: '' });
                 setTimeout(() => setStatus(''), 3000);
             } else {
                 setStatus('Failed to send request.');
@@ -50,21 +50,38 @@ export default function VenueHire() {
                     <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#0f172a', textAlign: 'center' }}>Enquire about Venue Hire</h3>
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Name</label>
-                            <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required placeholder="Your name" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
-                        </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Email</label>
-                            <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required placeholder="you@example.com" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Name</label>
+                                <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required placeholder="Your name" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Email</label>
+                                <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required placeholder="you@example.com" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                            </div>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Event Date</label>
-                                <input type="date" value={formData.eventDate} onChange={e => setFormData({...formData, eventDate: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Phone</label>
+                                <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required placeholder="Your phone number" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Number of Guests</label>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Location Area / Preference</label>
+                                <input type="text" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} placeholder="e.g. Main Cafe, Cellar" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Event Date</label>
+                                <input type="date" value={formData.eventDate} onChange={e => setFormData({...formData, eventDate: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit' }} />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Time</label>
+                                <input type="time" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit' }} />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Guests</label>
                                 <input type="number" min="1" value={formData.guests} onChange={e => setFormData({...formData, guests: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
                             </div>
                         </div>

@@ -1,8 +1,36 @@
-import { useState } from 'react';
-import { Save, Lock, Bell, CreditCard, Home, Plus, Trash2, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Save, Lock, Bell, CreditCard, Home, Plus, Trash2, Upload, Megaphone } from 'lucide-react';
 
 export default function Settings() {
-    const [activeTab, setActiveTab] = useState('security');
+    const [activeTab, setActiveTab] = useState('marketing');
+    const [banners, setBanners] = useState([]);
+    const [newBannerUrl, setNewBannerUrl] = useState('');
+
+    useEffect(() => {
+        fetch('/api/settings/banners')
+            .then(res => res.json())
+            .then(data => setBanners(data.banners || []))
+            .catch(err => console.error('Failed to load banners:', err));
+    }, []);
+
+    const handleSaveBanners = async (e) => {
+        e?.preventDefault();
+        try {
+            const token = localStorage.getItem('marmelo_token');
+            const res = await fetch('/api/settings/banners', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ banners })
+            });
+            if (res.ok) {
+                alert('Banners saved successfully!');
+            } else {
+                alert('Failed to save banners.');
+            }
+        } catch (err) {
+            alert('Error saving banners.');
+        }
+    };
 
     // Role-Based Access Control State
     const availableModules = ['Dashboard', 'POS', 'Orders', 'Products', 'Customers', 'Events', 'Settings'];
@@ -38,6 +66,7 @@ export default function Settings() {
 
     const tabs = [
         { id: 'store', label: 'Store Profile', icon: <Home size={18} /> },
+        { id: 'marketing', label: 'Marketing & Banners', icon: <Megaphone size={18} /> },
         { id: 'payments', label: 'Payment Methods', icon: <CreditCard size={18} /> },
         { id: 'notifications', label: 'Notifications', icon: <Bell size={18} /> },
         { id: 'security', label: 'Security & Access', icon: <Lock size={18} /> }
@@ -95,7 +124,7 @@ export default function Settings() {
                 <div style={{ flex: 1, backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ padding: '20px', borderBottom: '1px solid #e2e8f0' }}>
                         <h2 style={{ margin: 0, fontSize: '16px', color: '#0f172a', fontWeight: 'bold' }}>
-                            {activeTab === 'store' ? 'Store Profile' : activeTab === 'payments' ? 'Payment Integration' : activeTab === 'notifications' ? 'Alert Preferences' : 'Security Settings'}
+                            {activeTab === 'store' ? 'Store Profile' : activeTab === 'marketing' ? 'Marketing & Banners' : activeTab === 'payments' ? 'Payment Integration' : activeTab === 'notifications' ? 'Alert Preferences' : 'Security Settings'}
                         </h2>
                     </div>
                     <div style={{ padding: '40px 20px', minHeight: '300px' }}>
@@ -164,6 +193,55 @@ export default function Settings() {
                                     <textarea rows="4" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} defaultValue={"Mon-Thu: 8am - 6pm\nFri: 8am - 8pm\nSat: 8am - 6pm\nSun: 9am - 6pm"} />
                                 </div>
                             </form>
+                        )}
+
+                        {activeTab === 'marketing' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '600px' }}>
+                                <div>
+                                    <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '8px' }}>Flash Sale Banners</h3>
+                                    <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Provide image URLs to display promotional banners on the Shop page.</p>
+
+                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                                        <input 
+                                            type="text" 
+                                            value={newBannerUrl} 
+                                            onChange={(e) => setNewBannerUrl(e.target.value)} 
+                                            placeholder="https://example.com/banner.jpg" 
+                                            style={{ flex: 1, padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none', fontSize: '14px', color: '#334155' }} 
+                                        />
+                                        <button 
+                                            onClick={() => {
+                                                if(newBannerUrl.trim()) {
+                                                    setBanners([...banners, newBannerUrl.trim()]);
+                                                    setNewBannerUrl('');
+                                                }
+                                            }}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '10px 16px', backgroundColor: '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px' }}
+                                        >
+                                            <Plus size={16} /> Add Banner
+                                        </button>
+                                    </div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+                                        {banners.map((url, i) => (
+                                            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', backgroundColor: '#f8fafc' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
+                                                    <img src={url} alt={`Banner ${i+1}`} style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                                                    <span style={{ fontSize: '13px', color: '#334155', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>{url}</span>
+                                                </div>
+                                                <button onClick={() => setBanners(banners.filter((_, index) => index !== i))} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}>
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                        {banners.length === 0 && <p style={{ fontSize: '13px', color: '#94a3b8', fontStyle: 'italic' }}>No banners active.</p>}
+                                    </div>
+
+                                    <button onClick={handleSaveBanners} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px 16px', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', fontSize: '14px', width: 'fit-content' }}>
+                                        <Save size={16} /> Save Marketing Settings
+                                    </button>
+                                </div>
+                            </div>
                         )}
 
                         {activeTab === 'payments' && (

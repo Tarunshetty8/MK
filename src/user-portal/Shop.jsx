@@ -12,6 +12,14 @@ export default function Shop() {
     const [reviews, setReviews] = useState([]);
     const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '', user_name: currentUser ? currentUser.name : '' });
     const [reviewStatus, setReviewStatus] = useState('');
+    const [banners, setBanners] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/settings/banners')
+            .then(res => res.json())
+            .then(data => setBanners(data.banners || []))
+            .catch(err => console.error(err));
+    }, []);
 
     const fetchReviews = async (productId) => {
         try {
@@ -76,6 +84,16 @@ export default function Shop() {
                     Explore our curated selection of organic produce, fine wines, craft beers, and specialty coffee beans.
                 </p>
             </div>
+
+            {banners.length > 0 && (
+                <div style={{ maxWidth: '1200px', margin: '0 auto 3rem auto', padding: '0 2rem' }}>
+                    <div style={{ display: 'flex', overflowX: 'auto', gap: '1.5rem', paddingBottom: '1rem', scrollbarWidth: 'thin' }}>
+                        {banners.map((url, idx) => (
+                            <img key={idx} src={url} alt={`Flash Sale Banner ${idx + 1}`} style={{ minWidth: '300px', height: '250px', objectFit: 'cover', borderRadius: '16px', flex: 1, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
                 <div className="product-grid">

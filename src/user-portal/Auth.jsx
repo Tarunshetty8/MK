@@ -90,7 +90,14 @@ export default function Auth() {
     return (
         <div className="auth-container">
             {/* Left Image Panel (Desktop Only) */}
-            <div className="auth-image-panel">
+            <div 
+                className="auth-image-panel" 
+                style={{ 
+                    backgroundImage: isSignUp 
+                        ? 'url("https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/8f7df1de-71b0-431a-b075-82ee88982569/img-5.jpg?format=1500w")'
+                        : 'url("https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/62538653-2c3a-40a6-aa76-a8e612d8558c/img-6.jpg?format=1500w")' 
+                }}
+            >
                 <div className="auth-image-content">
                     <Logo color="white" size="2rem" style={{ marginBottom: '2rem' }} />
                     <h1>Experience the extraordinary, everyday.</h1>

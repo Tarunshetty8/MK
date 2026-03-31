@@ -379,6 +379,34 @@ app.post('/api/notifications/send', (req, res) => {
     res.status(200).json({ message: "Push notification simulated successfully" });
 });
 
+// App Settings (Banners)
+app.get('/api/settings/banners', (req, res) => {
+    pool.query("SELECT setting_value FROM App_Settings WHERE setting_key = 'flash_sale_banners'", (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.length > 0) {
+            try {
+                const banners = JSON.parse(result[0].setting_value);
+                res.json({ banners });
+            } catch (e) {
+                res.json({ banners: [] });
+            }
+        } else {
+            res.json({ banners: [] });
+        }
+    });
+});
+
+app.post('/api/settings/banners', authenticateToken, (req, res) => {
+    const { banners } = req.body;
+    const value = JSON.stringify(banners || []);
+    pool.query(`INSERT INTO App_Settings (setting_key, setting_value) VALUES ('flash_sale_banners', ?) ON DUPLICATE KEY UPDATE setting_value = ?`, 
+        [value, value], 
+        (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Banners updated successfully", banners });
+    });
+});
+
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });

@@ -141,6 +141,21 @@ async function initializeTables() {
             // Ignore error, column likely already exists
         }
 
+        await pool.promise().query(`CREATE TABLE IF NOT EXISTS App_Settings (
+            setting_key VARCHAR(255) PRIMARY KEY,
+            setting_value TEXT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )`);
+
+        try {
+            const [settingsRes] = await pool.promise().query("SELECT COUNT(*) as count FROM App_Settings WHERE setting_key = 'flash_sale_banners'");
+            if (parseInt(settingsRes[0].count) === 0) {
+                await pool.promise().query("INSERT INTO App_Settings (setting_key, setting_value) VALUES (?, ?)", ['flash_sale_banners', JSON.stringify(['https://images.squarespace-cdn.com/content/v1/655a0aefcc06663665faecbe/62538653-2c3a-40a6-aa76-a8e612d8558c/img-6.jpg?format=1500w'])]);
+            }
+        } catch (err) {
+            console.error('Failed to seed App_Settings:', err);
+        }
+
         console.log('Database tables initialized.');
         await seedMockData();
     } catch (err) {

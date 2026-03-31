@@ -120,15 +120,18 @@ export default function Basket() {
                         </div>
 
                         <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
-                            <h4 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Collection Details</h4>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Collection / Takeaway Details</h4>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+                                Please note: We currently only offer Collection/Takeaway at our Leyton location. We do not provide delivery.
+                            </p>
                             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <label htmlFor="collectionDate" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Date</label>
-                                    <input type="date" id="collectionDate" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} min={new Date().toISOString().split('T')[0]} defaultValue={new Date().toISOString().split('T')[0]} />
+                                    <label htmlFor="collectionDate" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Collection Date</label>
+                                    <input type="date" id="collectionDate" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none', fontFamily: 'inherit' }} min={new Date().toISOString().split('T')[0]} defaultValue={new Date().toISOString().split('T')[0]} />
                                 </div>
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <label htmlFor="collectionTime" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Time</label>
-                                    <input type="time" id="collectionTime" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none' }} defaultValue="12:00" />
+                                    <label htmlFor="collectionTime" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Collection Time</label>
+                                    <input type="time" id="collectionTime" required style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', outline: 'none', fontFamily: 'inherit' }} defaultValue="12:00" />
                                 </div>
                             </div>
                         </div>
