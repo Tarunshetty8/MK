@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './UserPortal.css';
 
 export default function Catering() {
-    const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', eventDate: '', guests: '', message: '' });
+    const [formData, setFormData] = useState({ groupName: '', startDate: '', endDate: '', deliveryTimes: '', guests: '', email: '', phone: '', message: '' });
     const [status, setStatus] = useState('');
 
     const handleSubmit = async (e) => {
@@ -17,16 +17,16 @@ export default function Catering() {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
-                    name: formData.name,
+                    name: formData.groupName,
                     type: 'Catering',
-                    details: `Email: ${formData.email}\nPhone: ${formData.phone}\nCompany: ${formData.company}\nMessage: ${formData.message}`,
-                    event_date: formData.eventDate,
+                    details: `Group Name: ${formData.groupName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nStart Date: ${formData.startDate}\nEnd Date: ${formData.endDate}\nDelivery Times: ${formData.deliveryTimes}\nMessage: ${formData.message}`,
+                    event_date: formData.startDate,
                     guests: formData.guests
                 })
             });
             if (res.ok) {
                 setStatus('Message sent successfully!');
-                setFormData({ name: '', email: '', phone: '', company: '', eventDate: '', guests: '', message: '' });
+                setFormData({ groupName: '', startDate: '', endDate: '', deliveryTimes: '', guests: '', email: '', phone: '', message: '' });
                 setTimeout(() => setStatus(''), 3000);
             } else {
                 setStatus('Failed to send request.');
@@ -52,8 +52,8 @@ export default function Catering() {
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             <div style={{ flex: '1 1 calc(50% - 0.5rem)' }}>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Name</label>
-                                <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required placeholder="Your name" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Group name</label>
+                                <input type="text" value={formData.groupName} onChange={e => setFormData({...formData, groupName: e.target.value})} required placeholder="Your group name" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
                             </div>
                             <div style={{ flex: '1 1 calc(50% - 0.5rem)' }}>
                                 <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Email</label>
@@ -63,24 +63,29 @@ export default function Catering() {
 
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                              <div style={{ flex: '1 1 calc(50% - 0.5rem)' }}>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Phone</label>
-                                <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="Your phone number" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Start date</label>
+                                <input type="date" value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit' }} />
                             </div>
                             <div style={{ flex: '1 1 calc(50% - 0.5rem)' }}>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Company</label>
-                                <input type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} placeholder="Company Name (Optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>End date</label>
+                                <input type="date" value={formData.endDate} onChange={e => setFormData({...formData, endDate: e.target.value})} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit' }} />
                             </div>
                         </div>
 
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                              <div style={{ flex: '1 1 calc(50% - 0.5rem)' }}>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Event Date</label>
-                                <input type="date" value={formData.eventDate} onChange={e => setFormData({...formData, eventDate: e.target.value})} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit' }} />
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Phone</label>
+                                <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="Your phone number" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
                             </div>
                             <div style={{ flex: '1 1 calc(50% - 0.5rem)' }}>
-                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Guests (approx)</label>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Number of guests</label>
                                 <input type="number" value={formData.guests} onChange={e => setFormData({...formData, guests: e.target.value})} required min="1" placeholder="Number of guests" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
                             </div>
+                        </div>
+
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Delivery times (please specify times for breakfast and lunch, as we make our deliveries separately)</label>
+                            <input type="text" value={formData.deliveryTimes} onChange={e => setFormData({...formData, deliveryTimes: e.target.value})} required placeholder="E.g. Breakfast at 8am, Lunch at 1pm" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
                         </div>
 
                         <div>
