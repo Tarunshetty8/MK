@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
+import ScrollToTop from './components/ScrollToTop';
 
 import AppLayout from './components/AppLayout';
 import Dashboard from './pages/Dashboard';
@@ -33,6 +33,7 @@ function App() {
     return (
         <DataProvider>
             <BrowserRouter>
+                <ScrollToTop />
                 <Routes>
                     {}
                     <Route path="/" element={<UserLayout />}>
