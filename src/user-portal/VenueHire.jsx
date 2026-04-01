@@ -37,8 +37,8 @@ export default function VenueHire() {
         }
     };
 
-    const inputStyle = { width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit', fontSize: '1rem' };
-    const labelStyle = { display: 'block', fontSize: '0.95rem', fontWeight: '600', color: '#1e293b', marginBottom: '0.5rem' };
+    const inputStyle = { width: '100%', padding: '0.6rem', borderRadius: '0', border: '1px solid #a3a3a3', outline: 'none', fontFamily: 'inherit', fontSize: '1rem' };
+    const labelStyle = { display: 'block', fontSize: '0.95rem', color: '#374151', marginBottom: '0.4rem', fontWeight: '400' };
 
 
     const featureCardStyle = {
@@ -148,22 +148,22 @@ export default function VenueHire() {
                         <h3 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '2.5rem', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>Enquire about Venue Hire</h3>
 
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                                 <div>
                                     <label style={labelStyle}>Name</label>
-                                    <input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required placeholder="Your name" style={inputStyle} />
+                                    <input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required style={inputStyle} />
                                 </div>
                                 <div>
                                     <label style={labelStyle}>Email</label>
-                                    <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required placeholder="you@example.com" style={inputStyle} />
+                                    <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required style={inputStyle} />
                                 </div>
                                 <div>
                                     <label style={labelStyle}>Phone</label>
-                                    <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} required placeholder="Your phone number" style={inputStyle} />
+                                    <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} required style={inputStyle} />
                                 </div>
                                 <div>
                                     <label style={labelStyle}>Location Area / Preference</label>
-                                    <input type="text" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="e.g. Main Cafe, Cellar" style={inputStyle} />
+                                    <input type="text" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} style={inputStyle} />
                                 </div>
                                 <div>
                                     <label style={labelStyle}>Event Date</label>
@@ -179,14 +179,14 @@ export default function VenueHire() {
                                 </div>
                             </div>
 
-                            <div style={{ marginTop: '1rem' }}>
+                            <div style={{ marginTop: '0' }}>
                                 <label style={labelStyle}>Message / Requirements</label>
-                                <textarea value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} required rows="4" placeholder="Tell us about the occasion..." style={{ ...inputStyle, resize: 'vertical' }}></textarea>
+                                <textarea value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} required rows="4" style={{ ...inputStyle, resize: 'vertical' }}></textarea>
                             </div>
 
                             {status && <p style={{ color: status.includes('success') ? 'green' : 'red', margin: 0, textAlign: 'center', fontWeight: '500' }}>{status}</p>}
 
-                            <button type="submit" className="primary-btn" disabled={status === 'Sending...'} style={{ justifyContent: 'center', marginTop: '1rem', width: '100%', fontSize: '1.05rem', padding: '1rem', borderRadius: '4px' }}>
+                            <button type="submit" className="primary-btn" disabled={status === 'Sending...'} style={{ justifyContent: 'center', marginTop: '1rem', width: '100%', fontSize: '1.05rem', padding: '1rem', borderRadius: '0' }}>
                                 {status === 'Sending...' ? 'Sending...' : 'Submit Enquiry'}
                             </button>
                         </form>

@@ -5,6 +5,9 @@ export default function Contact() {
     const [formData, setFormData] = useState({ name: '', email: '', type: 'General Enquiry', message: '' });
     const [status, setStatus] = useState('');
 
+    const inputStyle = { width: '100%', padding: '0.6rem', borderRadius: '0', border: '1px solid #a3a3a3', outline: 'none', fontFamily: 'inherit', fontSize: '1rem', backgroundColor: 'white' };
+    const labelStyle = { display: 'block', fontSize: '0.95rem', color: '#374151', marginBottom: '0.4rem', fontWeight: '400' };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('Sending...');
@@ -64,18 +67,18 @@ export default function Contact() {
                 <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#0f172a' }}>Send a Message</h3>
 
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Name</label>
-                            <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required placeholder="Your name" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                            <label style={labelStyle}>Name</label>
+                            <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required style={inputStyle} />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Email</label>
-                            <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required placeholder="you@example.com" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                            <label style={labelStyle}>Email</label>
+                            <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required style={inputStyle} />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Subject Inquiry</label>
-                            <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', backgroundColor: 'white' }}>
+                            <label style={labelStyle}>Subject Inquiry</label>
+                            <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})} style={inputStyle}>
                                 <option>General Enquiry</option>
                                 <option>Catering</option>
                                 <option>Venue Hire</option>
@@ -83,13 +86,13 @@ export default function Contact() {
                             </select>
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Message</label>
-                            <textarea value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} required rows="4" placeholder="How can we help?" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', resize: 'vertical' }}></textarea>
+                            <label style={labelStyle}>Message</label>
+                            <textarea value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} required rows="4" style={{...inputStyle, resize: 'vertical'}}></textarea>
                         </div>
 
                         {status && <p style={{ color: status.includes('success') ? 'green' : 'red', margin: 0 }}>{status}</p>}
 
-                        <button type="submit" disabled={status === 'Sending...'} style={{ backgroundColor: '#000000', color: '#ffffff', padding: '0.85rem', width: '100%', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', marginTop: '1rem', opacity: status === 'Sending...' ? 0.7 : 1 }}>
+                        <button type="submit" disabled={status === 'Sending...'} style={{ backgroundColor: '#000000', color: '#ffffff', padding: '1rem', width: '100%', borderRadius: '0', fontSize: '1.05rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', marginTop: '1rem', opacity: status === 'Sending...' ? 0.7 : 1 }}>
                             {status === 'Sending...' ? 'Sending...' : 'Send Message'}
                         </button>
                     </form>

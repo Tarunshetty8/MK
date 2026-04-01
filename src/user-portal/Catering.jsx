@@ -83,8 +83,8 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
         }
     };
 
-    const inputStyle = { width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid #cbd5e1', outline: 'none', fontFamily: 'inherit', fontSize: '1rem' };
-    const labelStyle = { display: 'block', fontSize: '1rem', color: '#334155', marginBottom: '0.75rem' };
+    const inputStyle = { width: '100%', padding: '0.6rem', borderRadius: '0', border: '1px solid #a3a3a3', outline: 'none', fontFamily: 'inherit', fontSize: '1rem' };
+    const labelStyle = { display: 'block', fontSize: '0.95rem', color: '#374151', marginBottom: '0.4rem', fontWeight: '400' };
     const checkLabelStyle = { display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', color: '#1e293b', marginBottom: '0.75rem', cursor: 'pointer', fontWeight: '400' };
 
 
@@ -209,22 +209,10 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
                         {/* Standard Information */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                             <div>
                                 <label style={labelStyle}>Group name</label>
                                 <input type="text" value={formData.groupName} onChange={e => setFormData({ ...formData, groupName: e.target.value })} required style={inputStyle} />
-                            </div>
-                            <div>
-                                <label style={labelStyle}>Email address</label>
-                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required style={inputStyle} />
-                            </div>
-                            <div>
-                                <label style={labelStyle}>Phone number</label>
-                                <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} style={inputStyle} />
-                            </div>
-                            <div>
-                                <label style={labelStyle}>Number of guests</label>
-                                <input type="number" value={formData.guests} onChange={e => setFormData({ ...formData, guests: e.target.value })} required min="1" style={inputStyle} />
                             </div>
                             <div>
                                 <label style={labelStyle}>Start date</label>
@@ -234,11 +222,26 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                                 <label style={labelStyle}>End date</label>
                                 <input type="date" value={formData.endDate} onChange={e => setFormData({ ...formData, endDate: e.target.value })} required style={inputStyle} />
                             </div>
-                        </div>
-
-                        <div>
-                            <label style={labelStyle}>Delivery times (please specify times for breakfast and lunch, as we make our deliveries separately)</label>
-                            <input type="text" value={formData.deliveryTimes} onChange={e => setFormData({ ...formData, deliveryTimes: e.target.value })} required style={inputStyle} />
+                            <div>
+                                <label style={labelStyle}>Delivery times (please specify times for breakfast and lunch, as we make our deliveries separately)</label>
+                                <input type="text" value={formData.deliveryTimes} onChange={e => setFormData({ ...formData, deliveryTimes: e.target.value })} required style={inputStyle} />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Number of guests</label>
+                                <input type="number" value={formData.guests} onChange={e => setFormData({ ...formData, guests: e.target.value })} required min="1" style={inputStyle} />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Event location</label>
+                                <input type="text" style={inputStyle} />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Email address</label>
+                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required style={inputStyle} />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Phone number</label>
+                                <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} style={inputStyle} />
+                            </div>
                         </div>
 
                         {/* Extended Preferences and Services Options */}
@@ -308,7 +311,7 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
 
                         {status && <p style={{ color: status.includes('success') ? 'green' : 'red', margin: 0, textAlign: 'center', fontWeight: '500' }}>{status}</p>}
 
-                        <button type="submit" className="primary-btn" disabled={status === 'Sending...'} style={{ justifyContent: 'center', marginTop: '1rem', width: '100%', fontSize: '1.05rem', padding: '1rem', borderRadius: '4px' }}>
+                        <button type="submit" className="primary-btn" disabled={status === 'Sending...'} style={{ justifyContent: 'center', marginTop: '1rem', width: '100%', fontSize: '1.05rem', padding: '1rem', borderRadius: '0' }}>
                             {status === 'Sending...' ? 'Sending...' : 'Submit Form'}
                         </button>
                     </form>
