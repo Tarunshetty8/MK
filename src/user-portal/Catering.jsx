@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, ChefHat, Leaf, Star } from 'lucide-react';
+import { Users, ChefHat, Leaf, Star, CheckCircle2 } from 'lucide-react';
 import './UserPortal.css';
 
 export default function Catering() {
@@ -200,8 +200,8 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
             </div>
 
             {/* Booking Form Layout */}
-            <div style={{ padding: '4rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
-                <div style={{ backgroundColor: 'white', padding: '3.5rem', borderRadius: '4px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
+            <div style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+                <div style={{ flex: '1 1 65%', backgroundColor: 'white', padding: '3.5rem', borderRadius: '4px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
                     <h3 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '2.5rem', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>Catering Enquiry Form</h3>
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
@@ -310,6 +310,18 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                             {status === 'Sending...' ? 'Sending...' : 'Submit Form'}
                         </button>
                     </form>
+                </div>
+
+                <div style={{ flex: '1 1 25%', backgroundColor: '#f8fafc', padding: '2.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', height: 'fit-content' }}>
+                    <h4 style={{ fontWeight: '700', fontSize: '1.25rem', color: '#0f172a', marginBottom: '1.5rem' }}>We can accommodate</h4>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                        <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569', fontSize: '1.05rem' }}><CheckCircle2 size={20} color="#16a34a" /> Vegetarian &amp; vegan</li>
+                        <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569', fontSize: '1.05rem' }}><CheckCircle2 size={20} color="#16a34a" /> Gluten-free</li>
+                        <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569', fontSize: '1.05rem' }}><CheckCircle2 size={20} color="#16a34a" /> Nut allergies</li>
+                        <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569', fontSize: '1.05rem' }}><CheckCircle2 size={20} color="#16a34a" /> Halal requirements</li>
+                        <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569', fontSize: '1.05rem' }}><CheckCircle2 size={20} color="#16a34a" /> Dairy-free</li>
+                        <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569', fontSize: '1.05rem' }}><CheckCircle2 size={20} color="#16a34a" /> Children's menus</li>
+                    </ul>
                 </div>
             </div>
         </div>
