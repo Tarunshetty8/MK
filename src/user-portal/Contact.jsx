@@ -55,21 +55,9 @@ export default function Contact() {
                         <p style={{ color: '#475569', lineHeight: '1.6' }}>020 3620 7580<br />Natalie@marmelokitchen.com</p>
                     </div>
 
-                    <div>
+                    <div style={{ marginBottom: '1rem' }}>
                         <p style={{ fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>Business Hours</p>
                         <p style={{ color: '#475569', lineHeight: '1.6' }}>Mon–Thu: 8am – 6pm<br />Friday: 8am – 8pm<br />Saturday: 8am – 6pm<br />Sunday: 9am – 6pm</p>
-                    </div>
-
-                    <div style={{ marginTop: '2.5rem', overflow: 'hidden', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.5654523963283!2d-0.007559184228943793!3d51.55783357964409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761d76b1fcaedd%3A0xc4aa9aa9bb3b0b57!2s169%20Francis%20Rd%2C%20London%20E10%206NT!5e0!3m2!1sen!2suk!4v1711204000000!5m2!1sen!2suk" 
-                            width="100%" 
-                            height="300" 
-                            style={{ border: 0, display: 'block' }} 
-                            allowFullScreen="" 
-                            loading="lazy" 
-                            referrerPolicy="no-referrer-when-downgrade">
-                        </iframe>
                     </div>
                 </div>
 
@@ -101,11 +89,23 @@ export default function Contact() {
 
                         {status && <p style={{ color: status.includes('success') ? 'green' : 'red', margin: 0 }}>{status}</p>}
 
-                        <button type="submit" className="primary-pill-btn" disabled={status === 'Sending...'} style={{ justifyContent: 'center', marginTop: '1rem', border: 'none', cursor: 'pointer', opacity: status === 'Sending...' ? 0.7 : 1 }}>
+                        <button type="submit" disabled={status === 'Sending...'} style={{ backgroundColor: '#000000', color: '#ffffff', padding: '0.85rem', width: '100%', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', marginTop: '1rem', opacity: status === 'Sending...' ? 0.7 : 1 }}>
                             {status === 'Sending...' ? 'Sending...' : 'Send Message'}
                         </button>
                     </form>
                 </div>
+            </div>
+
+            <div style={{ marginTop: '4rem', overflow: 'hidden', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.5654523963283!2d-0.007559184228943793!3d51.55783357964409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761d76b1fcaedd%3A0xc4aa9aa9bb3b0b57!2s169%20Francis%20Rd%2C%20London%20E10%206NT!5e0!3m2!1sen!2suk!4v1711204000000!5m2!1sen!2suk" 
+                    width="100%" 
+                    height="450" 
+                    style={{ border: 0, display: 'block' }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
         </div>
     );
