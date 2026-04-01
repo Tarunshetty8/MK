@@ -6,14 +6,14 @@ export default function Home() {
     return (
         <div className="home-page">
             <header className="hero-section">
-                <div className="hero-content">
-                    <p className="hero-pre-heading">OUR STORY</p>
-                    <h1 className="hero-heading">Born from a love of exceptional coffee, organic produce & fine wine</h1>
-                    <p className="hero-subheading">
+                <div className="hero-content" style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+                    <p className="hero-pre-heading" style={{ color: 'white' }}>OUR STORY</p>
+                    <h1 className="hero-heading" style={{ color: 'white', maxWidth: '100%' }}>Born from a love of exceptional coffee, organic produce & fine wine</h1>
+                    <p className="hero-subheading" style={{ color: 'white', maxWidth: '800px', margin: '0 auto 2.5rem auto' }}>
                         Marmelo is your neighborhood cafe, organic grocer, and wine cellar. We source the finest seasonal produce, roast our own coffee, and curate a selection of natural wines and craft beers. Every product we stock is a small celebration of flavor, craft, and community.
                     </p>
-                    <div style={{ marginTop: '2.5rem' }}>
-                        <Link to="/about" className="primary-pill-btn">
+                    <div>
+                        <Link to="/about" className="primary-pill-btn" style={{ margin: '0 auto', display: 'inline-flex' }}>
                             Our Full Story <ArrowRight size={18} style={{ marginLeft: '4px' }} />
                         </Link>
                     </div>
@@ -84,9 +84,8 @@ export default function Home() {
             </section>
 
             <section className="gallery-section" style={{ padding: '4rem 5%', backgroundColor: 'var(--stone-50)' }}>
-                <div className="section-header" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                    <p className="section-pre-heading">OUR WORK</p>
-                    <h2 className="section-heading">Image Gallery</h2>
+                <div className="section-header" style={{ marginBottom: '3rem', textAlign: 'center' }}>
+                    <h2 style={{ fontSize: '3rem', fontWeight: '800', color: '#0f172a' }}>OUR WORK</h2>
                 </div>
                 <div className="image-gallery-grid" style={{
                     display: 'grid',

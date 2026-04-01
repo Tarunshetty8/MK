@@ -114,7 +114,7 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
             </div>
 
             {/* Stats Banner */}
-            <div style={{ backgroundColor: 'var(--primary)', padding: '2.5rem 2rem', color: 'white' }}>
+            <div style={{ backgroundColor: 'var(--primary)', padding: '1.5rem 2rem', color: 'white' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
                     <div style={{ textAlign: 'center', flex: 1, minWidth: '200px' }}>
                         <Users size={28} style={{ marginBottom: '1rem', margin: '0 auto', opacity: 0.9 }} />
@@ -136,6 +136,66 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                         <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem' }}>5★ reviews</h4>
                         <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>200+ events</p>
                     </div>
+                </div>
+            </div>
+
+
+            {/* Reviews Section */}
+            <div style={{ padding: '5rem 2rem', maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+                <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '3rem', color: '#0f172a' }}>What our clients say</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                    
+                    <div style={{ backgroundColor: 'white', padding: '2.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', textAlign: 'left' }}>
+                        <div style={{ display: 'flex', gap: '4px', marginBottom: '1.5rem', color: '#fbbf24' }}>
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                        </div>
+                        <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: '1.7', marginBottom: '2rem', fontStyle: 'italic' }}>
+                            "Marmelo catered our company summer party for 60 people. The food was sensational — the pastel de nata dessert was a particular highlight. Would absolutely recommend."
+                        </p>
+                        <div>
+                            <h4 style={{ fontWeight: '700', color: '#0f172a', marginBottom: '0.25rem' }}>Rebecca Chen</h4>
+                            <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Events Manager, Hoxton Co.</p>
+                        </div>
+                    </div>
+
+                    <div style={{ backgroundColor: 'white', padding: '2.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', textAlign: 'left' }}>
+                        <div style={{ display: 'flex', gap: '4px', marginBottom: '1.5rem', color: '#fbbf24' }}>
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                        </div>
+                        <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: '1.7', marginBottom: '2rem', fontStyle: 'italic' }}>
+                            "We couldn't have imagined a more perfect wedding feast. The team were professional, the food was extraordinary, and our guests are still talking about it months later."
+                        </p>
+                        <div>
+                            <h4 style={{ fontWeight: '700', color: '#0f172a', marginBottom: '0.25rem' }}>James & Lucy Whitmore</h4>
+                            <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Wedding couple, October 2023</p>
+                        </div>
+                    </div>
+
+                    <div style={{ backgroundColor: 'white', padding: '2.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', textAlign: 'left' }}>
+                        <div style={{ display: 'flex', gap: '4px', marginBottom: '1.5rem', color: '#fbbf24' }}>
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                            <Star size={20} fill="currentColor" strokeWidth={0} />
+                        </div>
+                        <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: '1.7', marginBottom: '2rem', fontStyle: 'italic' }}>
+                            "Third year running we've used Marmelo for our annual conference. Consistent, delicious, and the team are an absolute pleasure to work with."
+                        </p>
+                        <div>
+                            <h4 style={{ fontWeight: '700', color: '#0f172a', marginBottom: '0.25rem' }}>Dr. Sarah Okonkwo</h4>
+                            <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Conference organiser</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
