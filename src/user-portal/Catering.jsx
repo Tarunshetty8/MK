@@ -118,23 +118,23 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                 <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
                     <div style={{ textAlign: 'center', flex: 1, minWidth: '200px' }}>
                         <Users size={28} style={{ marginBottom: '1rem', margin: '0 auto', opacity: 0.9 }} />
-                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem' }}>10–200 guests</h4>
-                        <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Any size event</p>
+                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem', color: 'white' }}>10–200 guests</h4>
+                        <p style={{ fontSize: '0.85rem', opacity: 0.8, color: 'white' }}>Any size event</p>
                     </div>
                     <div style={{ textAlign: 'center', flex: 1, minWidth: '200px' }}>
                         <ChefHat size={28} style={{ marginBottom: '1rem', margin: '0 auto', opacity: 0.9 }} />
-                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem' }}>Head chef led</h4>
-                        <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Expert curation</p>
+                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem', color: 'white' }}>Head chef led</h4>
+                        <p style={{ fontSize: '0.85rem', opacity: 0.8, color: 'white' }}>Expert curation</p>
                     </div>
                     <div style={{ textAlign: 'center', flex: 1, minWidth: '200px' }}>
                         <Leaf size={28} style={{ marginBottom: '1rem', margin: '0 auto', opacity: 0.9 }} />
-                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem' }}>Seasonal menu</h4>
-                        <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Locally sourced</p>
+                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem', color: 'white' }}>Seasonal menu</h4>
+                        <p style={{ fontSize: '0.85rem', opacity: 0.8, color: 'white' }}>Locally sourced</p>
                     </div>
                     <div style={{ textAlign: 'center', flex: 1, minWidth: '200px' }}>
                         <Star size={28} style={{ marginBottom: '1rem', margin: '0 auto', opacity: 0.9 }} />
-                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem' }}>5★ reviews</h4>
-                        <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>200+ events</p>
+                        <h4 style={{ fontWeight: '700', fontSize: '1.1rem', marginBottom: '0.25rem', color: 'white' }}>5★ reviews</h4>
+                        <p style={{ fontSize: '0.85rem', opacity: 0.8, color: 'white' }}>200+ events</p>
                     </div>
                 </div>
             </div>
