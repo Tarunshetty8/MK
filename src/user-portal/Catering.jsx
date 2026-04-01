@@ -4,13 +4,13 @@ import './UserPortal.css';
 
 export default function Catering() {
     const initialFormData = {
-        groupName: '', 
-        startDate: '', 
-        endDate: '', 
-        deliveryTimes: '', 
-        guests: '', 
-        email: '', 
-        phone: '', 
+        groupName: '',
+        startDate: '',
+        endDate: '',
+        deliveryTimes: '',
+        guests: '',
+        email: '',
+        phone: '',
         message: '',
         compostableCutlery: '',
         additionalServices: [],
@@ -19,7 +19,7 @@ export default function Catering() {
         dietaryPreferences: '',
         additionalOptions: []
     };
-    
+
     const [formData, setFormData] = useState(initialFormData);
     const [status, setStatus] = useState('');
 
@@ -70,7 +70,7 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                     guests: formData.guests
                 })
             });
-            
+
             if (res.ok) {
                 setStatus('Message sent successfully!');
                 setFormData(initialFormData);
@@ -78,7 +78,7 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
             } else {
                 setStatus('Failed to send request.');
             }
-        } catch(err) {
+        } catch (err) {
             setStatus('Error sending request.');
         }
     };
@@ -105,7 +105,7 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                 <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
                     <p style={{ color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', fontSize: '0.85rem' }}>OUR SERVICES</p>
                     <h1 style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', letterSpacing: '-0.02em' }}>
-                        🎉 Catering
+                        Catering
                     </h1>
                     <p style={{ fontSize: '1.15rem', maxWidth: '600px', lineHeight: '1.6', opacity: 0.9 }}>
                         Portuguese-inspired feasts for events across London. From intimate birthday parties to 200-person corporate events.
@@ -145,43 +145,43 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                     <h3 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '2.5rem', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>Catering Enquiry Form</h3>
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-                        
+
                         {/* Standard Information */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
                             <div>
                                 <label style={labelStyle}>Group name</label>
-                                <input type="text" value={formData.groupName} onChange={e => setFormData({...formData, groupName: e.target.value})} required style={inputStyle} />
+                                <input type="text" value={formData.groupName} onChange={e => setFormData({ ...formData, groupName: e.target.value })} required style={inputStyle} />
                             </div>
                             <div>
                                 <label style={labelStyle}>Email address</label>
-                                <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required style={inputStyle} />
+                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required style={inputStyle} />
                             </div>
                             <div>
                                 <label style={labelStyle}>Phone number</label>
-                                <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={inputStyle} />
+                                <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} style={inputStyle} />
                             </div>
                             <div>
                                 <label style={labelStyle}>Number of guests</label>
-                                <input type="number" value={formData.guests} onChange={e => setFormData({...formData, guests: e.target.value})} required min="1" style={inputStyle} />
+                                <input type="number" value={formData.guests} onChange={e => setFormData({ ...formData, guests: e.target.value })} required min="1" style={inputStyle} />
                             </div>
                             <div>
                                 <label style={labelStyle}>Start date</label>
-                                <input type="date" value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} required style={inputStyle} />
+                                <input type="date" value={formData.startDate} onChange={e => setFormData({ ...formData, startDate: e.target.value })} required style={inputStyle} />
                             </div>
                             <div>
                                 <label style={labelStyle}>End date</label>
-                                <input type="date" value={formData.endDate} onChange={e => setFormData({...formData, endDate: e.target.value})} required style={inputStyle} />
+                                <input type="date" value={formData.endDate} onChange={e => setFormData({ ...formData, endDate: e.target.value })} required style={inputStyle} />
                             </div>
                         </div>
 
                         <div>
                             <label style={labelStyle}>Delivery times (please specify times for breakfast and lunch, as we make our deliveries separately)</label>
-                            <input type="text" value={formData.deliveryTimes} onChange={e => setFormData({...formData, deliveryTimes: e.target.value})} required style={inputStyle} />
+                            <input type="text" value={formData.deliveryTimes} onChange={e => setFormData({ ...formData, deliveryTimes: e.target.value })} required style={inputStyle} />
                         </div>
 
                         {/* Extended Preferences and Services Options */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem', borderTop: '1px solid #e2e8f0', paddingTop: '2.5rem' }}>
-                            
+
                             <div>
                                 <label style={labelStyle}>Service required (tick as many as appropriate)</label>
                                 {['2 Breakfast options + Lunch (£TBC)', '3 Breakfast options + Lunch (£TBC)', '2 Breakfast options (£TBC)', '3 Breakfast options (£TBC)', 'Lunch (£TBC)', 'Dessert (£TBC)'].map(opt => (
@@ -195,11 +195,11 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                             <div>
                                 <label style={labelStyle}>Compostable cutlery</label>
                                 <label style={checkLabelStyle}>
-                                    <input type="radio" name="compostableCutlery" checked={formData.compostableCutlery === 'Yes'} onChange={() => setFormData({...formData, compostableCutlery: 'Yes'})} style={{ transform: 'scale(1.2)' }} />
+                                    <input type="radio" name="compostableCutlery" checked={formData.compostableCutlery === 'Yes'} onChange={() => setFormData({ ...formData, compostableCutlery: 'Yes' })} style={{ transform: 'scale(1.2)' }} />
                                     Yes
                                 </label>
                                 <label style={checkLabelStyle}>
-                                    <input type="radio" name="compostableCutlery" checked={formData.compostableCutlery === 'No'} onChange={() => setFormData({...formData, compostableCutlery: 'No'})} style={{ transform: 'scale(1.2)' }} />
+                                    <input type="radio" name="compostableCutlery" checked={formData.compostableCutlery === 'No'} onChange={() => setFormData({ ...formData, compostableCutlery: 'No' })} style={{ transform: 'scale(1.2)' }} />
                                     No
                                 </label>
                             </div>
@@ -207,7 +207,7 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                             <div>
                                 <label style={labelStyle}>Cutlery options</label>
                                 <label style={checkLabelStyle}>
-                                    <input type="radio" name="cutleryOptions" checked={formData.cutleryOptions === 'PLATTERS ENVIRONMENTALLY FRIENDLY DISPOSABLE'} onChange={() => setFormData({...formData, cutleryOptions: 'PLATTERS ENVIRONMENTALLY FRIENDLY DISPOSABLE'})} style={{ transform: 'scale(1.2)' }} />
+                                    <input type="radio" name="cutleryOptions" checked={formData.cutleryOptions === 'PLATTERS ENVIRONMENTALLY FRIENDLY DISPOSABLE'} onChange={() => setFormData({ ...formData, cutleryOptions: 'PLATTERS ENVIRONMENTALLY FRIENDLY DISPOSABLE' })} style={{ transform: 'scale(1.2)' }} />
                                     PLATTERS ENVIRONMENTALLY FRIENDLY DISPOSABLE
                                 </label>
                             </div>
@@ -234,14 +234,14 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
 
                             <div>
                                 <label style={labelStyle}>Dietary preferences and restrictions</label>
-                                <input type="text" value={formData.dietaryPreferences} onChange={e => setFormData({...formData, dietaryPreferences: e.target.value})} style={inputStyle} />
+                                <input type="text" value={formData.dietaryPreferences} onChange={e => setFormData({ ...formData, dietaryPreferences: e.target.value })} style={inputStyle} />
                             </div>
 
                             <div>
                                 <label style={labelStyle}>Message / Addtional Requirements</label>
-                                <textarea value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} required rows="4" style={{...inputStyle, resize: 'vertical'}}></textarea>
+                                <textarea value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} required rows="4" style={{ ...inputStyle, resize: 'vertical' }}></textarea>
                             </div>
-                            
+
                         </div>
 
                         {status && <p style={{ color: status.includes('success') ? 'green' : 'red', margin: 0, textAlign: 'center', fontWeight: '500' }}>{status}</p>}
