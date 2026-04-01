@@ -103,11 +103,11 @@ Additional Options: ${formData.additionalOptions.length > 0 ? formData.additiona
                 minHeight: '400px'
             }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-                    <p style={{ color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', fontSize: '0.85rem' }}>OUR SERVICES</p>
-                    <h1 style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', letterSpacing: '-0.02em' }}>
+                    <p style={{ color: 'white', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', fontSize: '0.85rem' }}>OUR SERVICES</p>
+                    <h1 style={{ color: 'white', fontSize: '3.5rem', fontWeight: '800', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', letterSpacing: '-0.02em' }}>
                         Catering
                     </h1>
-                    <p style={{ fontSize: '1.15rem', maxWidth: '600px', lineHeight: '1.6', opacity: 0.9 }}>
+                    <p style={{ color: 'white', fontSize: '1.15rem', maxWidth: '600px', lineHeight: '1.6', opacity: 0.9 }}>
                         Portuguese-inspired feasts for events across London. From intimate birthday parties to 200-person corporate events.
                     </p>
                 </div>

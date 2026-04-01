@@ -17,11 +17,11 @@ export default function About() {
                 minHeight: '400px'
             }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-                    <p style={{ color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', fontSize: '0.85rem' }}>WHO WE ARE</p>
-                    <h1 style={{ fontSize: '4rem', fontWeight: '800', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+                    <p style={{ color: 'white', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', fontSize: '0.85rem' }}>WHO WE ARE</p>
+                    <h1 style={{ color: 'white', fontSize: '4rem', fontWeight: '800', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
                         Our Story
                     </h1>
-                    <p style={{ fontSize: '1.2rem', maxWidth: '600px', lineHeight: '1.6', opacity: 0.9 }}>
+                    <p style={{ color: 'white', fontSize: '1.2rem', maxWidth: '600px', lineHeight: '1.6', opacity: 0.9 }}>
                         From a market stall to a beloved Bethnal Green institution.
                     </p>
                 </div>
